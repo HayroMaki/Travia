@@ -7,3 +7,8 @@
     margin: 10px 0;
     text-align: center;
 }
+
+#userImage {
+    height: 80px;
+    width: auto;
+}
