@@ -1,6 +1,6 @@
 #header {
     height: auto;
-    color: lightsteelblue;
+    background-color: lightsteelblue;
     display: flex;
     justify-content: space-between;
 }
@@ -12,6 +12,7 @@
 }
 
 #userImage {
+    float: right;
     height: 80px;
     width: auto;
 }
