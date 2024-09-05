@@ -6,10 +6,12 @@
     font-size: 80px;
     margin: 10px 0;
     text-align: center;
+    display: inline-block;
 }
 
 #userImage {
     height: 80px;
     width: auto;
-    align-self: end;
+    margin-left: auto;
+    display: inline-block;
 }
