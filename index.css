@@ -11,4 +11,5 @@
 #userImage {
     height: 80px;
     width: auto;
+    align-self: end;
 }
