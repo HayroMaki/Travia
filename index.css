@@ -1,17 +1,17 @@
 #header {
     height: auto;
     color: lightsteelblue;
+    display: flex;
+    justify-content: space-between;
 }
 
 #mainTitle {
     font-size: 80px;
     margin: 10px 0;
     text-align: center;
-    display: inline-block;
 }
 
 #userImage {
     height: 80px;
     width: auto;
-    display: inline-block;
 }
