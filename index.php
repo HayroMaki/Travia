@@ -32,7 +32,7 @@
 
         <tr>
           <th>
-            <label for="formA">Départ</label>
+            <label for="formA">Arrivé</label>
             <br>
             <select id="formA" name="formD">
               <option value="Gare du Nord">Gare du Nord</option>
