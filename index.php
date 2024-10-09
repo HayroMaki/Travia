@@ -15,6 +15,14 @@
     </a>
   </header>
 
+  <p><?php echo date("l d/m/Y") ?></p>
+
+  <div class="content">
+      <form method="POST" action="">
+          <input type="text" name="name" id="name" placeholder="Nom de famille"><br></br>
+      </form>
+  </div>
+  <!--
   <div class="content">
     <form action="GET">
       <table id="formTable">
@@ -25,7 +33,7 @@
             <select id="formD" name="formD">
               <option value="Gare du Nord">Gare du Nord</option>
               <option value="Gare de l'Est">Gare de l'Est</option>
-              <!-- PHP -->
+
             </select>
           </th>
         </tr>
@@ -35,9 +43,9 @@
             <label for="formA">Arrivé</label>
             <br>
             <select id="formA" name="formD">
-                <option value="Gare du Nord">Gare du Nord</option>
-                <option value="Gare de l'Est">Gare de l'Est</option>
-              <!-- PHP -->
+              <option value="Gare du Nord">Gare du Nord</option>
+              <option value="Gare de l'Est">Gare de l'Est</option>
+
             </select>
           </th>
         </tr>
@@ -50,5 +58,6 @@
       </table>
     </form>
   </div>
+  -->
 </body>
 </html>
