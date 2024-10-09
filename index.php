@@ -37,7 +37,6 @@
             <select id="formA" name="formD">
                 <option value="Gare du Nord">Gare du Nord</option>
                 <option value="Gare de l'Est">Gare de l'Est</option>
-                <option value="Gare de l'Est">Gare de l'Est</option>
               <!-- PHP -->
             </select>
           </th>
