@@ -1,4 +1,10 @@
 <!DOCTYPE html>
+
+<?php
+global $cnx;
+include ("config.php");
+?>
+
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
@@ -15,13 +21,6 @@
     </a>
   </header>
 
-  <p><?php echo date("l d/m/Y") ?></p>
-
-  <div class="content">
-      <form method="POST" action="">
-          <input type="text" name="name" id="name" placeholder="Nom de famille"><br></br>
-      </form>
-  </div>
   <!--
   <div class="content">
     <form action="GET">
@@ -59,5 +58,6 @@
     </form>
   </div>
   -->
+    <?php include("scripts/decodeShip.php") ?>
 </body>
 </html>
