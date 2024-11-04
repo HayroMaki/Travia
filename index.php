@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 
 <?php
+ini_set('memory_limit', '4096M');
+
 global $cnx;
 include ("config.php");
 ?>
@@ -21,7 +23,12 @@ include ("config.php");
     </a>
   </header>
 
-  <!--
+  <?php
+  include("scripts/decodeShip.php");
+  include("scripts/decodePlanet.php");
+  ?>
+
+
   <div class="content">
     <form action="GET">
       <table id="formTable">
@@ -57,7 +64,6 @@ include ("config.php");
       </table>
     </form>
   </div>
-  -->
-    <?php include("scripts/decodeShip.php") ?>
+
 </body>
 </html>

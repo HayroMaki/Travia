@@ -20,10 +20,15 @@
         die('Error decoding the JSON file.');
     }
 
-    $ship_list = array();
+    //Clear the ship table
+    ship::clear_ship_db();
 
-    // Create the ship
+    // Create all ships as an object
     foreach ($json_data as $ship) {
-        $ship_list[] = new ship($ship["id"], $ship["name"], $ship["camp"], $ship["speed_kmh"], $ship["capacity"]);
+        $ship_obj = new ship($ship["id"], $ship["name"], $ship["camp"], $ship["speed_kmh"], $ship["capacity"]);
+
+        // Add the ship to the DB
+        $ship_obj->add_ship_to_db();
     }
+
 
