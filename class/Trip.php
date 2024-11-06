@@ -42,10 +42,10 @@ class Trip
         return $this->ship_id;
     }
     public function toString(): string {
-        return "departure Planet Id:".$this->departure_planet_id .
-            ", destination Planet Id:".$this->destination_planet_id .
-            ", departure Day:".$this->departure_day .
-            ", departure Time:".$this->departure_time .
+        return "depPlanet Id:".$this->departure_planet_id .
+            ", destPlanet Id:".$this->destination_planet_id .
+            ", depDay:".$this->departure_day .
+            ", depTime:".$this->departure_time .
             ", ship Id:".$this->ship_id ;
     }
     public static function clear_trip_db(): void {

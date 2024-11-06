@@ -135,6 +135,23 @@ class Planet
         $stmt = $cnx->prepare($query);
         $stmt->execute();
     }
+    public static function get_every_planet(): array {
+        global $cnx;
+
+        $query = "SELECT name FROM planet";
+        $stmt = $cnx->prepare($query);
+        $stmt->execute();
+        $fetch = $stmt->fetchAll();
+
+        if (empty($fetch)) {
+            return [];
+        }
+        $result = array();
+        foreach ($fetch as $row) {
+            $result[] = $row['name'];
+        }
+        return $result;
+    }
     public function add_planet_to_db() : void {
         global $cnx;
 
@@ -164,6 +181,6 @@ class Planet
         $stmt->bindParam(':diameter', $this->diameter, PDO::PARAM_STR);
         $stmt->bindParam(':gravity', $this->gravity, PDO::PARAM_STR);
 
-        $result = $stmt->execute();
+        $stmt->execute();
     }
 }

@@ -38,3 +38,29 @@
 .GenButton:hover {
     background-color: steelblue;
 }
+
+.autocomplete {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    flex-direction: row;
+
+}
+
+.autocomplete div {
+    margin-right: 1em;
+}
+
+.autocomplete .search {
+    width: 250px;
+}
+
+.autocomplete-items {
+    margin-top: 1px;
+}
+
+.autocomplete-items div {
+    width: 250px;
+    border: 2px inset lightsteelblue;
+    background-color: ghostwhite;
+}

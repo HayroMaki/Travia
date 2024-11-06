@@ -52,7 +52,7 @@
                         <p>Remplissage de la BDD : [<b id="percentage">0</b>%]</p>
                         <p>Remplissage de la table 'ship' : [<b id="ship_counter">0</b>/10]</p>
                         <p>Remplissage de la table 'planet' : [<b id="planet_counter">0</b>/5444]</p>
-                        <p>Remplissage de la table 'trip' : [<b id="trip_counter">0</b>/123028]</p>
+                        <p>Remplissage de la table 'trip' : [<b id="trip_counter">0</b>/127047]</p>
                     </div>
                   <?php
 
@@ -71,6 +71,10 @@
               echo '<script type="text/javascript"> window.location="'.Tool::get_URL_wo_GET().'";</script>';
           }
       } ?>
+
+      <div id="genDiv">
+          <?php include("include/searchForm.php");?>
+      </div>
 
       <div id="genDiv">
         <a href="index.php?order=generate">
