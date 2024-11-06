@@ -19,13 +19,22 @@
     width: auto;
 }
 
-.content {
-    margin-top: 100px;
-    max-width: 1000px;
+#genDiv {
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-direction: row;
+    margin-top: 40px;
 }
 
-#formTable {
-    margin-left: auto;
-    margin-right: auto;
+.GenButton {
+    width: 100px;
+    height: 50px;
     background-color: lightsteelblue;
+    text-align: center;
+    margin: 1em;
+}
+
+.GenButton:hover {
+    background-color: steelblue;
 }

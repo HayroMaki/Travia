@@ -1,8 +1,9 @@
 
 <?php
-    include "class/ship.php";
+    require_once "include/includeClasses.php";
     global $cnx;
-    include "./config.php";
+
+    global $ship_count;
 
     // Read the JSON file
     $json = file_get_contents("./data/ships.json");
@@ -21,14 +22,18 @@
     }
 
     //Clear the ship table
-    ship::clear_ship_db();
+    Ship::clear_ship_db();
 
     // Create all ships as an object
-    foreach ($json_data as $ship) {
-        $ship_obj = new ship($ship["id"], $ship["name"], $ship["camp"], $ship["speed_kmh"], $ship["capacity"]);
+    foreach ($json_data as $ship_dict) {
+        $ship_obj = new Ship($ship_dict["id"], $ship_dict["name"], $ship_dict["camp"], $ship_dict["speed_kmh"], $ship_dict["capacity"]);
 
         // Add the ship to the DB
         $ship_obj->add_ship_to_db();
+
+        // Display the number of done ships
+        $ship_count++;
+        echo "<script type='text/javascript'> document.getElementById('ship_counter').innerHTML = '".$ship_count."'; </script>";
     }
 
 

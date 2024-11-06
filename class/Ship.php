@@ -1,6 +1,6 @@
 <?php
 
-class ship
+class Ship
 {
     private int $id;
     private string $name;

@@ -1,6 +1,6 @@
 <?php
 
-class planet
+class Planet
 {
     private string $name;
     private ?string $image;
@@ -139,7 +139,8 @@ class planet
         global $cnx;
 
         $query = "INSERT INTO planet (name,image,coord,x,y,sunName,subGridCoord,subGridX,subGridY,region,sector,suns,moons,position,distance,lengthDay,lengthYear,diameter,gravity) 
-                VALUES (:name, :image, :coord, :x, :y, :sun_name, :sub_grid_coord, :sub_grid_x, :sub_grid_y, :region, :sector, :suns, :moons, :position, :distance, :length_day, :length_year, :diameter, :gravity)";
+                VALUES (:name, :image, :coord, :x, :y, :sun_name, :sub_grid_coord, :sub_grid_x, :sub_grid_y, :region, :sector, :suns, :moons, :position, :distance, :length_day, :length_year, :diameter, :gravity)
+                ";
 
         $stmt = $cnx->prepare($query);
 
@@ -163,6 +164,6 @@ class planet
         $stmt->bindParam(':diameter', $this->diameter, PDO::PARAM_STR);
         $stmt->bindParam(':gravity', $this->gravity, PDO::PARAM_STR);
 
-        $stmt->execute();
+        $result = $stmt->execute();
     }
 }
