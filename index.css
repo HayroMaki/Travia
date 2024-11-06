@@ -1,3 +1,8 @@
+body {
+    margin: 0;
+    padding: 0;
+}
+
 #header {
     height: auto;
     background-color: lightsteelblue;
@@ -8,13 +13,22 @@
 #mainTitle {
     font-size: 80px;
     height: 100px;
-    margin: 10px 0;
+    margin: 10px 0 10px 20px;
     text-align: center;
 }
 
+#mainTitleLink:link, #mainTitleLink:visited, #mainTitleLink:active {
+    transition: color 0.5s;
+    text-decoration: none;
+    color: black;
+}
+
+#mainTitleLink:hover {
+    color: darkslateblue;
+}
+
 #userImage {
-    margin: 20px;
-    margin-left: auto;
+    margin: 20px 20px 20px auto;
     height: 80px;
     width: auto;
 }
@@ -27,16 +41,25 @@
     margin-top: 40px;
 }
 
+#genDiv a:link, #genDiv a:visited, #genDiv a:active {
+    text-decoration: none;
+    color: black;
+}
+
 .GenButton {
     width: 100px;
     height: 50px;
-    background-color: lightsteelblue;
+    background-color: ghostwhite;
     text-align: center;
+    justify-content: center;
     margin: 1em;
+    border: 3px outset lightsteelblue;
+    transition: all 0.5s;
 }
 
 .GenButton:hover {
-    background-color: steelblue;
+    background-color: lightsteelblue;
+    border-color: steelblue;
 }
 
 .autocomplete {
@@ -55,12 +78,12 @@
     width: 250px;
 }
 
-.autocomplete-items {
-    margin-top: 1px;
+.autocomplete .search input {
+    width: 250px;
 }
 
 .autocomplete-items div {
-    width: 250px;
-    border: 2px inset lightsteelblue;
+    width: 254px;
+    border: 2px outset lightsteelblue;
     background-color: ghostwhite;
 }

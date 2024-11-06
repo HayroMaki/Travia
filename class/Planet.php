@@ -139,6 +139,7 @@ class Planet
         global $cnx;
 
         $query = "SELECT name FROM planet";
+
         $stmt = $cnx->prepare($query);
         $stmt->execute();
         $fetch = $stmt->fetchAll();
@@ -151,6 +152,18 @@ class Planet
             $result[] = $row['name'];
         }
         return $result;
+    }
+    public static function check_if_present(string $name): bool {
+        global $cnx;
+
+        $query = "SELECT name FROM planet WHERE name = ?";
+
+        $stmt = $cnx->prepare($query);
+        $stmt->bindParam(1, $name);
+        $stmt->execute();
+        $fetch = $stmt->fetchAll();
+
+        return !empty($fetch);
     }
     public function add_planet_to_db() : void {
         global $cnx;

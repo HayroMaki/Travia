@@ -22,4 +22,27 @@ class Tool
 
         return $protocol . $_SERVER['HTTP_HOST'] . parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
     }
+    public static function add_search_log(string $user, string $departure, string $destination, bool $success, string $reason) {
+        global $cnx;
+
+        if ($success) {
+            $success_msg = "Search successful.";
+        } else {
+            $success_msg = "Search failed : Reason : ".$reason.".";
+        }
+
+        $msg = "user:".addslashes($user)." searched a path from ".addslashes($departure)." to ".addslashes($destination)." > ".$success_msg;
+
+        $query = "INSERT INTO log (trace) VALUES ('".$msg."')";
+        $stmt = $cnx->prepare($query);
+        $stmt->execute();
+    }
+    public static function get_log(): array {
+        global $cnx;
+
+        $query = "SELECT * FROM log";
+        $stmt = $cnx->prepare($query);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
 }
