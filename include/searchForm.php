@@ -118,7 +118,7 @@
     var planets = <?php echo json_encode(Planet::get_every_planet()); ?>
 </script>
 
-<form action="/travia/computeTrip.php" method="get" autocomplete="off">
+<form action="/travia/redirectTravel.php" method="get" autocomplete="off">
     <?php
     if (isset($error_msg)) {
         echo "<p style='color: darkred; text-align: center' ><b>$error_msg</b></p>";

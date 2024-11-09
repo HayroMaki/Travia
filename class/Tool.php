@@ -24,6 +24,7 @@ class Tool
     }
     public static function add_search_log(string $user, string $departure, string $destination, bool $success, string $reason) {
         global $cnx;
+        date_default_timezone_set('Europe/Moscow');
 
         if ($success) {
             $success_msg = "Search successful.";
@@ -32,9 +33,11 @@ class Tool
         }
 
         $msg = "user:".addslashes($user)." searched a path from ".addslashes($departure)." to ".addslashes($destination)." > ".$success_msg;
+        $log_date = date("Y-m-d H:i:s");
 
-        $query = "INSERT INTO log (trace) VALUES ('".$msg."')";
+        $query = "INSERT INTO log (date,trace) VALUES ('".$log_date."','".$msg."')";
         $stmt = $cnx->prepare($query);
+        echo $query;
         $stmt->execute();
     }
     public static function get_log(): array {

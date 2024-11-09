@@ -16,9 +16,10 @@
         <?php include("include/header.inc.php") ?>
         <table>
             <?php
-            foreach (Tool::get_log() as $log) { ?>
+                foreach (Tool::get_log() as $log) { ?>
                 <tr>
                     <td>log n°<?php echo $log['id']; ?> :</td>
+                    <td>(<?php echo $log['date'] ?>) :</td>
                     <td><?php echo $log['trace']; ?></td>
                 </tr>
             <?php } ?>

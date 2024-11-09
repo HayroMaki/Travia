@@ -196,4 +196,52 @@ class Planet
 
         $stmt->execute();
     }
+    public static function getGalacticCenter() : Planet {
+        return new Planet(
+            "Core",null,
+            null,0,0,
+            null,
+            null,0.0,0.0,
+            "Core","Core",0,0,
+            0,0,0,0,0,0);
+    }
+    public static function get_planet_from_name(string $name): ?Planet {
+        global $cnx;
+
+        $query = "SELECT * FROM planet WHERE name = ?";
+        $stmt = $cnx->prepare($query);
+
+        $stmt->bindParam(1, $name, PDO::PARAM_STR);
+
+        $stmt->execute();
+        $f = $stmt->fetchAll();
+
+        $f = $f[0];
+
+        if (empty($f)) {
+            return null;
+        }
+        return new Planet(
+            $f['name'],$f['image'],
+            $f['coord'],$f['x'],$f['y'],
+            $f['sunName'],
+            $f['subGridCoord'],$f['subGridX'],$f['subGridY'],
+            $f['region'],$f['sector'],$f['suns'],$f['moons'],
+            $f['position'],$f['distance'],$f['lengthDay'],$f['lengthYear'],
+            $f['diameter'],$f['gravity']);
+    }
+    public function getDistanceWith(Planet $planet): array {
+        $p1_x = ($this->getX()+$this->getSubGridX());
+        $p1_y = ($this->getY()+$this->getSubGridY());
+
+        $p2_x = ($planet->getX()-$planet->getSubGridX());
+        $p2_y = ($planet->getY()-$planet->getSubGridY());
+
+        $const_billion_km_to_light_year = 9460.7379375591;
+
+        $result_in_billion_km = sqrt((pow(2,$p1_x - $p2_x)) + (pow(2,$p1_y - $p2_y)));
+        $result_in_light_year = $result_in_billion_km/$const_billion_km_to_light_year;
+
+        return array($result_in_billion_km,$result_in_light_year);
+    }
 }
