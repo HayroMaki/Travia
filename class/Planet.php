@@ -234,12 +234,12 @@ class Planet
         $p1_x = ($this->getX()+$this->getSubGridX());
         $p1_y = ($this->getY()+$this->getSubGridY());
 
-        $p2_x = ($planet->getX()-$planet->getSubGridX());
-        $p2_y = ($planet->getY()-$planet->getSubGridY());
+        $p2_x = ($planet->getX()+$planet->getSubGridX());
+        $p2_y = ($planet->getY()+$planet->getSubGridY());
 
         $const_billion_km_to_light_year = 9460.7379375591;
 
-        $result_in_billion_km = sqrt((pow(2,$p1_x - $p2_x)) + (pow(2,$p1_y - $p2_y)));
+        $result_in_billion_km = sqrt((pow(2,abs($p1_x - $p2_x))) + (pow(2,abs($p1_y - $p2_y))));
         $result_in_light_year = $result_in_billion_km/$const_billion_km_to_light_year;
 
         return array($result_in_billion_km,$result_in_light_year);

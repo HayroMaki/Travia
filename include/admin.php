@@ -4,8 +4,8 @@ if (isset($_GET)) {
     if (isset($_GET['order'])) {
         $order = $_GET['order'];
 
-        // If the order is to generate :
-        if ($order == "generate") {
+        // If the order is to generate the data's from the json file :
+        if ($order == "generateData") {
             // First, clear the DB
             include("scripts/deleteAll.php");
 
@@ -23,7 +23,11 @@ if (isset($_GET)) {
             include("scripts/decodeShip.php");
             include("scripts/decodePlanet.php");
 
-            // If the order is to delete :
+        // If the order is to generate the tables from the sql file :
+        } else if ($order == "generateTables") {
+            include("scripts/createTables.php");
+
+        // If the order is to delete the data's :
         } else if ($order == "delete") {
 
             // Clear the DB
@@ -40,15 +44,19 @@ if (isset($_GET)) {
 </div>
 
 <div id="genDiv">
-    <a href="./index.php?order=generate">
+    <a href="?order=generateTables">
+        <div class="GenButton">Generate Tables</div>
+    </a>
+
+    <a href="?order=generateData">
         <div class="GenButton">Generate Database</div>
     </a>
 
-    <a href="./index.php?order=delete">
-        <div class="GenButton">Delete Database</div>
+    <a href="?order=delete">
+        <div class="GenButton">Clear Database</div>
     </a>
 
-    <a href="./log.php">
+    <a href="/log.php">
         <div class="GenButton">Check Logs</div>
     </a>
 </div>

@@ -3,7 +3,7 @@ $login = "";
 $password = "";
 
 try {
-    $cnx = new PDO('pgsql:host=localhost;dbname=travia',$login,$password);
+    $cnx = new PDO('mysql:host=localhost;dbname=travia',$login,$password);
 }
 catch (PDOException $e) {
     echo "ERREUR : La connexion a échouée";
