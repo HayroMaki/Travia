@@ -4,6 +4,6 @@
         <p id="mainTitle">Travia</p>
     </a>
     <a href="">
-        <img src="icons/utilisateur.png" id="userImage" alt="user icon">
+        <img src="icons/userPalpatine.png" id="userImage" alt="user icon">
     </a>
 </header>

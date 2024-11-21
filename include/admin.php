@@ -45,18 +45,18 @@ if (isset($_GET)) {
 
 <div id="genDiv">
     <a href="?order=generateTables">
-        <div class="GenButton">Generate Tables</div>
+        <div class="GenButton">Generate<br>Tables</div>
     </a>
 
     <a href="?order=generateData">
-        <div class="GenButton">Generate Database</div>
+        <div class="GenButton">Generate<br>Database</div>
     </a>
 
     <a href="?order=delete">
-        <div class="GenButton">Clear Database</div>
+        <div class="GenButton">Clear<br>Database</div>
     </a>
 
-    <a href="/log.php">
-        <div class="GenButton">Check Logs</div>
+    <a href="./log.php">
+        <div class="GenButton">Check<br>Logs</div>
     </a>
 </div>
