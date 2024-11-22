@@ -2,7 +2,7 @@
 
 <?php
     require_once "include/includeClasses.php";
-    include("include/config.php");
+    include("include/config_local.php");
     global $cnx;
 
     $departure = $_GET['Departure'];
