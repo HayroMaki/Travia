@@ -8,7 +8,7 @@
     // Set up the PDO
     global $cnx;
     include("include/config.php");
-    require_once "include/includeClasses.php";
+    require_once("include/includeClasses.php");
 
     global $ship_count;
     $ship_count = 0;

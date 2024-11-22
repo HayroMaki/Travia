@@ -2,7 +2,7 @@
 
 <?php
     require_once "include/includeClasses.php";
-    include("include/config_local.php");
+    include("include/config.php");
     global $cnx;
 ?>
 

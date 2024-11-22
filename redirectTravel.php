@@ -1,6 +1,6 @@
 <?php
     require_once "./include/includeClasses.php";
-    include("./include/config_local.php");
+    include("./include/config.php");
     global $cnx;
 
     if (is_null($_GET["Departure"]) || is_null($_GET["Destination"])) {

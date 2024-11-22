@@ -71,10 +71,8 @@ class Trip
         $stmt->bindParam(':departureTime', $this->departure_time, PDO::PARAM_STR);
         $stmt->bindParam(':shipId', $this->ship_id, PDO::PARAM_INT);
 
-        $result = $stmt->execute();
-
-        if (!$result) {
-            echo "Something went wrong when trying to add new trip.\n";
+        if (!$stmt->execute()) {
+            print_r($stmt->errorInfo()); // Affiche l'erreur SQL
         }
     }
 }

@@ -35,7 +35,7 @@ if (isset($_GET)) {
         }
 
         // Go back to page without GET
-        echo '<script type="text/javascript"> window.location="'.Tool::get_URL_wo_GET().'";</script>';
+        //echo '<script type="text/javascript"> window.location="'.Tool::get_URL_wo_GET().'";</script>';
     }
 } ?>
 

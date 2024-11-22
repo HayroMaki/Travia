@@ -2,7 +2,7 @@
 
 <?php
     require_once "include/includeClasses.php";
-    include("include/config_local.php");
+    include("include/config.php");
     global $cnx;
 
     $departure = $_GET['Departure'];
@@ -34,10 +34,10 @@
             <div class="genDiv">
                 <p>
                     <?php
-                    echo "Distance between "
-                        .$departure." (".$dep_coord_str.") and "
-                        .$destination." (".$dest_coord_str.") : "
-                        .round($distance_km,2)." billion km / ".round($distance_ly,6)." light years."
+                        echo "Distance between "
+                            .$departure." (".$dep_coord_str.") and "
+                            .$destination." (".$dest_coord_str.") : "
+                            .round($distance_km,2)." billion km / ".round($distance_ly,6)." light years."
                     ?>
             </div>
         </div>
