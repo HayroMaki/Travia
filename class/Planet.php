@@ -21,6 +21,21 @@ class Planet
     private float $length_year;
     private float $diameter;
     private float $gravity;
+    private static array $region_color = [
+        "Colonies" => "#fa777a",
+        "Core" => "#e48700",
+        "Deep Core" => "#b79a08",
+        "Expansion Region" => "#bc9c03",
+        "Extragalactic" => "#20be03",
+        "Hutt Space" => "#0fb879",
+        "Inner Rim Territories" => "#00c2a6",
+        "Mid Rim Territories" => "#00badc",
+        "Outer Rim Territories" => "#06a7fc",
+        "Talcene Sector" => "#8f8ffc",
+        "The Centrality" => "#ce70fc",
+        "Tingel Arm" => "#f060dc",
+        "Wild Space" => "#fe60ad"
+    ];
 
     public function __construct(string $name, ?string $image,
                                 ?string $coord, float $x, float $y,
@@ -135,76 +150,6 @@ class Planet
         $stmt = $cnx->prepare($query);
         $stmt->execute();
     }
-    public static function get_every_planet(): array {
-        global $cnx;
-
-        $query = "SELECT name FROM planet";
-
-        $stmt = $cnx->prepare($query);
-        $stmt->execute();
-        $fetch = $stmt->fetchAll();
-
-        if (empty($fetch)) {
-            return [];
-        }
-        $result = array();
-        foreach ($fetch as $row) {
-            $result[] = $row['name'];
-        }
-        return $result;
-    }
-    public static function check_if_present(string $name): bool {
-        global $cnx;
-
-        $query = "SELECT name FROM planet WHERE name = ?";
-
-        $stmt = $cnx->prepare($query);
-        $stmt->bindParam(1, $name);
-        $stmt->execute();
-        $fetch = $stmt->fetchAll();
-
-        return !empty($fetch);
-    }
-    public function add_planet_to_db() : void {
-        global $cnx;
-
-        $query = "INSERT INTO planet (name,image,coord,x,y,sunName,subGridCoord,subGridX,subGridY,region,sector,suns,moons,position,distance,lengthDay,lengthYear,diameter,gravity) 
-                VALUES (:name, :image, :coord, :x, :y, :sun_name, :sub_grid_coord, :sub_grid_x, :sub_grid_y, :region, :sector, :suns, :moons, :position, :distance, :length_day, :length_year, :diameter, :gravity)
-                ";
-
-        $stmt = $cnx->prepare($query);
-
-        $stmt->bindParam(':name', $this->name, PDO::PARAM_STR);
-        $stmt->bindParam(':image', $this->image, PDO::PARAM_STR);
-        $stmt->bindParam(':coord', $this->coord, PDO::PARAM_STR);
-        $stmt->bindParam(':x', $this->x, PDO::PARAM_STR);
-        $stmt->bindParam(':y', $this->y, PDO::PARAM_STR);
-        $stmt->bindParam(':sun_name', $this->sun_name, PDO::PARAM_STR);
-        $stmt->bindParam(':sub_grid_coord', $this->sub_grid_coord, PDO::PARAM_STR);
-        $stmt->bindParam(':sub_grid_x', $this->sub_grid_x, PDO::PARAM_STR);
-        $stmt->bindParam(':sub_grid_y', $this->sub_grid_y, PDO::PARAM_STR);
-        $stmt->bindParam(':region', $this->region, PDO::PARAM_STR);
-        $stmt->bindParam(':sector', $this->sector, PDO::PARAM_STR);
-        $stmt->bindParam(':suns', $this->suns, PDO::PARAM_INT);
-        $stmt->bindParam(':moons', $this->moons, PDO::PARAM_INT);
-        $stmt->bindParam(':position', $this->position, PDO::PARAM_INT);
-        $stmt->bindParam(':distance', $this->distance, PDO::PARAM_STR);
-        $stmt->bindParam(':length_day', $this->length_day, PDO::PARAM_STR);
-        $stmt->bindParam(':length_year', $this->length_year, PDO::PARAM_STR);
-        $stmt->bindParam(':diameter', $this->diameter, PDO::PARAM_STR);
-        $stmt->bindParam(':gravity', $this->gravity, PDO::PARAM_STR);
-
-        $stmt->execute();
-    }
-    public static function getGalacticCenter() : Planet {
-        return new Planet(
-            "Core",null,
-            null,0,0,
-            null,
-            null,0.0,0.0,
-            "Core","Core",0,0,
-            0,0,0,0,0,0);
-    }
     public static function get_planet_from_name(string $name): ?Planet {
         global $cnx;
 
@@ -230,18 +175,113 @@ class Planet
             $f['position'],$f['distance'],$f['lengthDay'],$f['lengthYear'],
             $f['diameter'],$f['gravity']);
     }
-    public function getDistanceWith(Planet $planet): array {
-        $p1_x = ($this->getX()+$this->getSubGridX());
-        $p1_y = ($this->getY()+$this->getSubGridY());
+    public static function get_every_planet_name(): array {
+        global $cnx;
 
-        $p2_x = ($planet->getX()+$planet->getSubGridX());
-        $p2_y = ($planet->getY()+$planet->getSubGridY());
+        $query = "SELECT name FROM planet";
+
+        $stmt = $cnx->prepare($query);
+        $stmt->execute();
+        $fetch = $stmt->fetchAll();
+
+        if (empty($fetch)) {
+            return [];
+        }
+
+        $result = array();
+        foreach ($fetch as $row) {
+            $result[] = strval($row['name']);
+        }
+
+        return $result;
+    }
+    public static function get_every_planet_for_map(): array {
+        $result = array();
+        $planets = Planet::get_every_planet_name();
+
+        foreach ($planets as $planet) {
+            $planet_obj = Planet::get_planet_from_name($planet);
+
+            $result[] = [
+                'name' => $planet_obj->getName(),
+                'x' => ($planet_obj->getX()+$planet_obj->getSubGridX()) * 6,
+                'y' => ($planet_obj->getY()+$planet_obj->getSubGridY()) * 6,
+                'color' => Planet::$region_color[$planet_obj->getRegion()]
+            ];
+        }
+
+        return $result;
+    }
+    public static function check_if_present(string $name): bool {
+        global $cnx;
+
+        $query = "SELECT name FROM planet WHERE name = ?";
+
+        $stmt = $cnx->prepare($query);
+        $stmt->bindParam(1, $name);
+        $stmt->execute();
+        $fetch = $stmt->fetchAll();
+
+        return !empty($fetch);
+    }
+    public function add_planet_to_db() : void {
+        global $cnx;
+
+        $query = "INSERT INTO planet (name,image,coord,x,y,sunName,subGridCoord,subGridX,subGridY,region,sector,suns,moons,position,distance,lengthDay,lengthYear,diameter,gravity) 
+                VALUES (:name, :images, :coord, :x, :y, :sun_name, :sub_grid_coord, :sub_grid_x, :sub_grid_y, :region, :sector, :suns, :moons, :position, :distance, :length_day, :length_year, :diameter, :gravity)
+                ";
+
+        $stmt = $cnx->prepare($query);
+
+        $stmt->bindParam(':name', $this->name, PDO::PARAM_STR);
+        $stmt->bindParam(':images', $this->image, PDO::PARAM_STR);
+        $stmt->bindParam(':coord', $this->coord, PDO::PARAM_STR);
+        $stmt->bindParam(':x', $this->x, PDO::PARAM_STR);
+        $stmt->bindParam(':y', $this->y, PDO::PARAM_STR);
+        $stmt->bindParam(':sun_name', $this->sun_name, PDO::PARAM_STR);
+        $stmt->bindParam(':sub_grid_coord', $this->sub_grid_coord, PDO::PARAM_STR);
+        $stmt->bindParam(':sub_grid_x', $this->sub_grid_x, PDO::PARAM_STR);
+        $stmt->bindParam(':sub_grid_y', $this->sub_grid_y, PDO::PARAM_STR);
+        $stmt->bindParam(':region', $this->region, PDO::PARAM_STR);
+        $stmt->bindParam(':sector', $this->sector, PDO::PARAM_STR);
+        $stmt->bindParam(':suns', $this->suns, PDO::PARAM_INT);
+        $stmt->bindParam(':moons', $this->moons, PDO::PARAM_INT);
+        $stmt->bindParam(':position', $this->position, PDO::PARAM_INT);
+        $stmt->bindParam(':distance', $this->distance, PDO::PARAM_STR);
+        $stmt->bindParam(':length_day', $this->length_day, PDO::PARAM_STR);
+        $stmt->bindParam(':length_year', $this->length_year, PDO::PARAM_STR);
+        $stmt->bindParam(':diameter', $this->diameter, PDO::PARAM_STR);
+        $stmt->bindParam(':gravity', $this->gravity, PDO::PARAM_STR);
+
+        $stmt->execute();
+    }
+    public function getDistanceWith(Planet $planet): array {
+        $p1_x = ($this->getX() + $this->getSubGridX()) * 6;
+        $p1_y = ($this->getY() + $this->getSubGridY()) * 6;
+
+        $p2_x = ($planet->getX() + $planet->getSubGridX()) * 6;
+        $p2_y = ($planet->getY() + $planet->getSubGridY()) * 6;
 
         $const_billion_km_to_light_year = 9460.7379375591;
 
-        $result_in_billion_km = sqrt((pow(2,abs($p1_x - $p2_x))) + (pow(2,abs($p1_y - $p2_y))));
+        $result_in_billion_km = sqrt((pow(($p1_x - $p2_x),2)) + (pow(($p1_y - $p2_y),2)));
         $result_in_light_year = $result_in_billion_km/$const_billion_km_to_light_year;
 
         return array($result_in_billion_km,$result_in_light_year);
+    }
+    public function getImageUrl(): string {
+        global $cnx;
+
+        if ($this->image == "no_image.png") return "data/images/no_image.png";
+
+        $image = str_replace(' ','_',$this->image);
+
+        $md5 = md5($image);
+        $first_md5 = substr($md5, 0, 1);
+        $second_md5 = substr($md5, 0, 2);
+
+        $url = "https://static.wikia.nocookie.net/starwars/images/$first_md5/$second_md5/$image";
+
+        return $url;
     }
 }

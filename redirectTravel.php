@@ -1,7 +1,6 @@
 <?php
+    require_once("include/setupPDO.php");
     require_once "./include/includeClasses.php";
-    include("./include/config.php");
-    global $cnx;
 
     if (is_null($_GET["Departure"]) || is_null($_GET["Destination"])) {
         Tool::add_search_log("Palpatine","", "",false,"empty_fields");

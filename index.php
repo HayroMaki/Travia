@@ -6,8 +6,7 @@
     ini_set('max_execution_time', 0);
 
     // Set up the PDO
-    global $cnx;
-    include("include/config.php");
+    require_once("include/setupPDO.php");
     require_once("include/includeClasses.php");
 
     global $ship_count;
@@ -39,9 +38,10 @@
         <link href="index.css?v=<?php echo time(); ?>" rel="stylesheet">
     </head>
     <body>
-      <?php
-        include("include/header.inc.php");
-        include("include/admin.php");
-      ?>
+        <?php
+            include("include/header.inc.php");
+            include("include/searchForm.php");
+            include("include/admin.php");
+        ?>
     </body>
 </html>

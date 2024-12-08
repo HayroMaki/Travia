@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 
 <?php
+    require_once("include/setupPDO.php");
     require_once "include/includeClasses.php";
-    include("include/config.php");
-    global $cnx;
 ?>
 
 <html lang="fr">

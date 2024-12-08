@@ -40,10 +40,6 @@ if (isset($_GET)) {
 } ?>
 
 <div id="genDiv">
-    <?php include("include/searchForm.php");?>
-</div>
-
-<div id="genDiv">
     <a href="?order=generateTables">
         <div class="GenButton">Generate<br>Tables</div>
     </a>

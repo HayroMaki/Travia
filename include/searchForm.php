@@ -115,36 +115,37 @@
         });
     }
 
-    var planets = <?php echo json_encode(Planet::get_every_planet()); ?>
+    var planets = <?php echo json_encode(Planet::get_every_planet_name()); ?>
 </script>
-
-<form action="redirectTravel.php" method="get" autocomplete="off">
-    <?php
-    if (isset($error_msg)) {
-        echo "<p style='color: darkred; text-align: center' ><b>$error_msg</b></p>";
-    }
-    ?>
-    <div class="autocomplete">
-        <div>
-            <label for="formD"><b>Departure Planet</b></label>
-            <br>
-            <div class="search">
-                <input type="text" name="Departure" id="formD" placeholder="Search planet...">
+<div id="genDiv">
+    <form action="redirectTravel.php" method="get" autocomplete="off">
+        <?php
+        if (isset($error_msg)) {
+            echo "<p style='color: darkred; text-align: center' ><b>$error_msg</b></p>";
+        }
+        ?>
+        <div class="autocomplete">
+            <div>
+                <label for="formD"><b>Departure Planet</b></label>
+                <br>
+                <div class="search">
+                    <input type="text" name="Departure" id="formD" placeholder="Search planet...">
+                </div>
+            </div>
+            <div>
+                <label for="formA"><b>Destination Planet</b></label>
+                <br>
+                <div class="search">
+                    <input type="text" name="Destination" id="formA" placeholder="Search planet...">
+                </div>
+            </div>
+            <div>
+                <br>
+                <input type="submit" value="OK">
             </div>
         </div>
-        <div>
-            <label for="formA"><b>Destination Planet</b></label>
-            <br>
-            <div class="search">
-                <input type="text" name="Destination" id="formA" placeholder="Search planet...">
-            </div>
-        </div>
-        <div>
-            <br>
-            <input type="submit" value="OK">
-        </div>
-    </div>
-</form>
+    </form>
+</div>
 <script type="text/javascript">
     autocomplete(document.getElementById('formD'), planets);
     autocomplete(document.getElementById('formA'), planets);

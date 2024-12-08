@@ -1,36 +1,70 @@
+@font-face {
+    font-family: Syne;
+    src: url(data/fonts/Syne/static/Syne-Bold.ttf);
+}
+
+@font-face {
+    font-family: Inter;
+    src: url(data/fonts/Inter/Inter-VariableFont_opsz,wght.ttf);
+}
+
 body {
     margin: 0;
     padding: 0;
+    background-color: black;
+}
+
+body, h1 {
+    color: white;
+    font-family: Syne, sans-serif;
+    font-weight: normal;
+}
+
+h2, h3, h4, h5, h6 {
+    font-family: Inter, sans-serif;
 }
 
 #header {
-    height: auto;
-    background-color: lightsteelblue;
+    height: 100px;
+    width: 100%;
+    background-color: black;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
+}
+
+#white-line {
+    margin-top: 0;
+    border : 2px solid white;
+}
+
+#user-image {
+    margin: 10% 0 10%;
+    height: 80%;
+    width: auto;
+}
+
+#travia-logo {
+    margin: 2px 0 0;
+    height: 100%;
+    width: auto;
+}
+
+#mainTitleLink {
+    margin-right: auto;
+    text-decoration: none;
 }
 
 #mainTitle {
-    font-size: 80px;
-    height: 100px;
-    margin: 10px 0 10px 20px;
-    text-align: center;
-}
-
-#mainTitleLink:link, #mainTitleLink:visited, #mainTitleLink:active {
     transition: color 0.5s;
-    text-decoration: none;
-    color: black;
+    color: white;
+    font-size: 5rem;
+    height: 100%;
+    text-align: center;
+    margin: 5% 0 0;
 }
 
-#mainTitleLink:hover {
-    color: darkslateblue;
-}
-
-#userImage {
-    margin: 20px 20px 20px auto;
-    height: 80px;
-    width: auto;
+#mainTitle:hover {
+    color: dodgerblue;
 }
 
 #genDiv {
@@ -43,23 +77,23 @@ body {
 
 #genDiv a:link, #genDiv a:visited, #genDiv a:active {
     text-decoration: none;
-    color: black;
+    color: white;
 }
 
 .GenButton {
     width: 100px;
     height: 50px;
-    background-color: ghostwhite;
+    background-color: #050505;
     text-align: center;
     justify-content: center;
     margin: 1em;
-    border: 3px outset lightsteelblue;
+    border: 3px outset dimgray;
     transition: all 0.5s;
 }
 
 .GenButton:hover {
-    background-color: lightsteelblue;
-    border-color: steelblue;
+    background-color: midnightblue;
+    border-color: dodgerblue;
 }
 
 .autocomplete {
@@ -67,7 +101,6 @@ body {
     justify-content: center;
     align-items: flex-start;
     flex-direction: row;
-
 }
 
 .autocomplete div {
@@ -84,6 +117,146 @@ body {
 
 .autocomplete-items div {
     width: 254px;
-    border: 2px outset lightsteelblue;
-    background-color: ghostwhite;
+    border: 2px outset dodgerblue;
+    background-color: black;
+}
+
+.selected-travel {
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5%;
+    width: 80%;
+    margin-right: auto;
+    margin-left: auto;
+    margin-top: 2%;
+    background: rgba(105, 105, 105, 0.1);
+    border-radius: 1rem;
+}
+
+.planet-info {
+    width: 40%;
+    flex: 1 1 0px;
+    margin-top: 2%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.planet-image {
+    height: 200px;
+    width: 200px;
+    margin-bottom: 5%;
+}
+
+img.circle {
+    object-fit: cover;
+    border-radius: 50%;
+    height: 100%;
+    width: 100%;
+
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none; /* Standard syntax */
+}
+
+.selected-travel h1 {
+    margin: 0;
+    color: white;
+    font-size: 50px;
+    text-align: center;
+}
+
+.selected-travel h2 {
+    margin: 0;
+    color: dimgray;
+}
+
+.selected-travel h3 {
+    margin: 0;
+    font-size: 16px;
+    color: dimgray;
+}
+
+.selected-travel h2 #important {
+    color: white;
+}
+
+.travel-info {
+    flex: 1 1 0px;
+    width: 20%;
+    margin-top: 2%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.travel-arrow {
+    height: 120px;
+    width: auto;
+
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none; /* Standard syntax */
+}
+
+#info-container {
+    flex: 1 0 0px;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+#map-container {
+    flex: 1 0 0px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+#map {
+    margin-top: 1%;
+    margin-bottom: 1%;
+    height: 400px;
+    width: 400px;
+    background-color: rgba(0, 0, 0, 0.1);
+    border: 15px solid rgba(0, 0, 0, 0.1);
+    border-radius: 1rem;
+}
+
+#more-travels-title {
+    margin-bottom: 0;
+    margin-left: 2%;
+}
+
+.non-selected-travel {
+    display:flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 80%;
+    margin-right: auto;
+    margin-left: auto;
+    margin-top: 1%;
+    background: rgba(105, 105, 105, 0.1);
+    border: 0;
+    border-radius: 1rem;
+    cursor: pointer;
+}
+
+.non-selected-travel span {
+    margin: 1% 0;
+    color: white;
+    font-size: 30px;
+    text-align: center;
+    font-family: Inter, sans-serif;
+    font-weight: bold;
+}
+
+.non-selected-travel span:nth-child(1) {
+    margin-left: 1%;
+}
+
+.non-selected-travel span:last-child {
+    margin-right: 1%;
 }
