@@ -14,13 +14,14 @@ body {
     background-color: black;
 }
 
-body, h1 {
+h1, b {
     color: white;
     font-family: Syne, sans-serif;
     font-weight: normal;
 }
 
 h2, h3, h4, h5, h6 {
+    color: white;
     font-family: Inter, sans-serif;
 }
 
@@ -76,10 +77,13 @@ h2, h3, h4, h5, h6 {
     margin-top: 40px;
 }
 
-#genDiv a:link, #genDiv a:visited, #genDiv a:active {
+.admin-link:link, .admin-link:visited, .admin-link:active {
     text-decoration: none;
     color: white;
+    font-family: Syne, sans-serif;
+    font-weight: normal;
 }
+
 
 .GenButton {
     width: 100px;
@@ -106,6 +110,9 @@ h2, h3, h4, h5, h6 {
 
 .autocomplete div {
     margin-right: 1em;
+    color: white;
+    font-family: Syne, sans-serif;
+    font-weight: normal;
 }
 
 .autocomplete .search {
@@ -120,6 +127,10 @@ h2, h3, h4, h5, h6 {
     width: 254px;
     border: 2px outset dodgerblue;
     background-color: black;
+}
+
+div.autocomplete-active {
+    border: 2px outset white;
 }
 
 .selected-travel {
@@ -269,4 +280,39 @@ img.circle {
 
 .non-selected-travel span:last-child {
     margin-right: 1%;
+}
+
+div.leaflet-popup-tip {
+    background-color: #222222;
+    border: 1px solid white;
+}
+
+div.leaflet-popup-content-wrapper {
+    background-color: #222222;
+    border: 1px solid white;
+}
+
+div.leaflet-popup-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    max-width: 150px;
+}
+
+.lightbox-planet-name {
+    transform: translate(0,-4rem);
+    font-size: 22px;
+    font-family: Syne;
+    color: white;
+    text-align: center;
+    margin-bottom: 5%;
+}
+
+.lightbox-planet-image {
+    transform: translate(0,calc(-4rem - 1px));
+    margin-left: auto;
+    margin-right: auto;
+    background: linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 50%, rgba(0,0,0,0) 50%);
+    clip-path: circle(3.2rem);
+    padding: 1px;
 }

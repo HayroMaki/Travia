@@ -58,50 +58,53 @@
                 }
             }
         });
-        /*execute a function presses a key on the keyboard:*/
+        // Execute a function presses a key on the keyboard :
         inp.addEventListener("keydown", function(e) {
             var x = document.getElementById(this.id + "autocomplete-list");
             if (x) x = x.getElementsByTagName("div");
             if (e.keyCode == 40) {
-                /*If the arrow DOWN key is pressed,
-                increase the currentFocus variable:*/
+                // If the arrow DOWN key is pressed,
+                // increase the currentFocus variable :
                 currentFocus++;
-                /*and and make the current item more visible:*/
+                // And make the current item more visible :
                 addActive(x);
-            } else if (e.keyCode == 38) { //up
-                /*If the arrow UP key is pressed,
-                decrease the currentFocus variable:*/
+            } else if (e.keyCode == 38) {
+                // If the arrow UP key is pressed,
+                // decrease the currentFocus variable :
                 currentFocus--;
-                /*and and make the current item more visible:*/
+                // And make the current item more visible :
                 addActive(x);
             } else if (e.keyCode == 13) {
-                /*If the ENTER key is pressed, prevent the form from being submitted,*/
+                // If the ENTER key is pressed, prevent the form from being submitted,
                 e.preventDefault();
                 if (currentFocus > -1) {
-                    /*and simulate a click on the "active" item:*/
+                    // And simulate a click on the "active" item :
                     if (x) x[currentFocus].click();
                 }
             }
         });
+
         function addActive(x) {
-            /*a function to classify an item as "active":*/
+            // A function to classify an item as "active" :
             if (!x) return false;
-            /*start by removing the "active" class on all items:*/
+            // Start by removing the "active" class on all items :
             removeActive(x);
             if (currentFocus >= x.length) currentFocus = 0;
             if (currentFocus < 0) currentFocus = (x.length - 1);
-            /*add class "autocomplete-active":*/
+            // Add class "autocomplete-active" :
             x[currentFocus].classList.add("autocomplete-active");
         }
+
         function removeActive(x) {
-            /*a function to remove the "active" class from all autocomplete items:*/
+            // A function to remove the "active" class from all autocomplete items :
             for (var i = 0; i < x.length; i++) {
                 x[i].classList.remove("autocomplete-active");
             }
         }
+
         function closeAllLists(elmnt) {
-            /*close all autocomplete lists in the document,
-            except the one passed as an argument:*/
+            // Close all autocomplete lists in the document,
+            // except the one passed as an argument :
             var x = document.getElementsByClassName("autocomplete-items");
             for (var i = 0; i < x.length; i++) {
                 if (elmnt != x[i] && elmnt != inp) {
@@ -109,13 +112,13 @@
                 }
             }
         }
-        /*execute a function when someone clicks in the document:*/
+        // Execute a function when someone clicks in the document :
         document.addEventListener("click", function (e) {
             closeAllLists(e.target);
         });
     }
 
-    // take the planet names array from the database :
+    // Take the planet names array from the database :
     var planets = <?php echo json_encode(Planet::get_every_planet_name()); ?>
 </script>
 <div id="genDiv">

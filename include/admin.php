@@ -52,19 +52,19 @@ Create 4 buttons that allows the admin user to :
  - Check the logs from the database.
  -->
 <div id="genDiv">
-    <a href="?order=generateTables">
+    <a href="?order=generateTables" class="admin-link">
         <div class="GenButton">Generate<br>Tables</div>
     </a>
 
-    <a href="?order=generateData">
+    <a href="?order=generateData" class="admin-link">
         <div class="GenButton">Generate<br>Database</div>
     </a>
 
-    <a href="?order=delete">
+    <a href="?order=delete" class="admin-link">
         <div class="GenButton">Clear<br>Database</div>
     </a>
 
-    <a href="./log.php">
+    <a href="./log.php" class="admin-link">
         <div class="GenButton">Check<br>Logs</div>
     </a>
 </div>
