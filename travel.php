@@ -210,12 +210,18 @@
                         // Sometimes the circle stays big, so after 5sec, make it shrink :
                         setTimeout(() => {
                             animateCircle(this, this.options.radius, 3, 500);
+                            // Just in case, bring selected back to front :
+                            dep_planet_circle.bringToFront();
+                            dest_planet_circle.bringToFront();
                         }, 5000);
                     });
 
                     // When not hovering anymore, shrink it back :
                     circle.on('mouseout', function () {
                         animateCircle(this, this.options.radius, 3, 200);
+                        // Just in case, bring selected back to front :
+                        dep_planet_circle.bringToFront();
+                        dest_planet_circle.bringToFront();
                     });
                 }
             });
@@ -224,18 +230,20 @@
             animateCircle(dep_planet_circle,dep_planet_circle.options.radius,6,0);
             dep_planet_circle.options.color = darkenColor("#ffffff",50);
             dep_planet_circle.options.fillColor = "#ffffff";
-            dep_planet_circle.bringToFront();
 
             animateCircle(dest_planet_circle,dest_planet_circle.options.radius,6,0);
             dest_planet_circle.options.color = darkenColor("#ffffff",50);
             dest_planet_circle.options.fillColor = "#ffffff";
-            dest_planet_circle.bringToFront();
 
             // Draw a direct line between the two planets :
             const line = L.polyline([dep_planet_xy,dest_planet_xy],{
                 weight: 4,
                 color: "#ffffff",
             }).addTo(map);
+
+            // Bring to front after creating the line so that the click isn't buggy :
+            dep_planet_circle.bringToFront();
+            dest_planet_circle.bringToFront();
         </script>
     </body>
 </html>
