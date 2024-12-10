@@ -16,27 +16,22 @@ class Trip
         $this->departure_time = $departure_time;
         $this->ship_id = $ship_id;
     }
-
     public function getDeparturePlanetId(): int
     {
         return $this->departure_planet_id;
     }
-
     public function getDestinationPlanetId(): int
     {
         return $this->destination_planet_id;
     }
-
     public function getDepartureDay(): string
     {
         return $this->departure_day;
     }
-
     public function getDepartureTime(): string
     {
         return $this->departure_time;
     }
-
     public function getShipId(): int
     {
         return $this->ship_id;
@@ -48,14 +43,13 @@ class Trip
             ", depTime:".$this->departure_time .
             ", ship Id:".$this->ship_id ;
     }
-    public static function clear_trip_db(): void {
-        global $cnx;
 
-        $query = "TRUNCATE TABLE trip";
-
-        $stmt = $cnx->prepare($query);
-        $stmt->execute();
-    }
+    /**
+     * Adds the trip to the database.
+     * Doesn't work if the $cnx isn't setup.
+     *
+     * @return void
+     */
     public function add_trip_to_db() : void
     {
         global $cnx;
@@ -74,5 +68,20 @@ class Trip
         if (!$stmt->execute()) {
             print_r($stmt->errorInfo()); // Affiche l'erreur SQL
         }
+    }
+
+    /**
+     * Completely clear the datas from the trip table of the database.
+     * Doesn't work if the $cnx isn't setup.
+     *
+     * @return void
+     */
+    public static function clear_trip_db(): void {
+        global $cnx;
+
+        $query = "TRUNCATE TABLE trip";
+
+        $stmt = $cnx->prepare($query);
+        $stmt->execute();
     }
 }

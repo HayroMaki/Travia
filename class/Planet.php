@@ -21,6 +21,12 @@ class Planet
     private float $length_year;
     private float $diameter;
     private float $gravity;
+
+    /**
+     * @var array|string[]
+     * an array of strings where keys are name of regions and values are colors.
+     * For each region associates a different color to show on the map.
+     */
     private static array $region_color = [
         "Colonies" => "#fa777a",
         "Core" => "#e48700",
@@ -68,12 +74,10 @@ class Planet
     {
         return $this->name;
     }
-
     public function getImage(): string
     {
         return $this->image;
     }
-
     public function getCoord(): string
     {
         return $this->coord;
@@ -142,88 +146,13 @@ class Planet
     {
         return $this->gravity;
     }
-    public static function clear_planet_db(): void {
-        global $cnx;
 
-        $query = "TRUNCATE TABLE planet";
-
-        $stmt = $cnx->prepare($query);
-        $stmt->execute();
-    }
-    public static function get_planet_from_name(string $name): ?Planet {
-        global $cnx;
-
-        $query = "SELECT * FROM planet WHERE name = ?";
-        $stmt = $cnx->prepare($query);
-
-        $stmt->bindParam(1, $name, PDO::PARAM_STR);
-
-        $stmt->execute();
-        $f = $stmt->fetchAll();
-
-        $f = $f[0];
-
-        if (empty($f)) {
-            return null;
-        }
-        return new Planet(
-            $f['name'],$f['image'],
-            $f['coord'],$f['x'],$f['y'],
-            $f['sunName'],
-            $f['subGridCoord'],$f['subGridX'],$f['subGridY'],
-            $f['region'],$f['sector'],$f['suns'],$f['moons'],
-            $f['position'],$f['distance'],$f['lengthDay'],$f['lengthYear'],
-            $f['diameter'],$f['gravity']);
-    }
-    public static function get_every_planet_name(): array {
-        global $cnx;
-
-        $query = "SELECT name FROM planet";
-
-        $stmt = $cnx->prepare($query);
-        $stmt->execute();
-        $fetch = $stmt->fetchAll();
-
-        if (empty($fetch)) {
-            return [];
-        }
-
-        $result = array();
-        foreach ($fetch as $row) {
-            $result[] = strval($row['name']);
-        }
-
-        return $result;
-    }
-    public static function get_every_planet_for_map(): array {
-        $result = array();
-        $planets = Planet::get_every_planet_name();
-
-        foreach ($planets as $planet) {
-            $planet_obj = Planet::get_planet_from_name($planet);
-
-            $result[] = [
-                'name' => $planet_obj->getName(),
-                'x' => ($planet_obj->getX()+$planet_obj->getSubGridX()) * 6,
-                'y' => ($planet_obj->getY()+$planet_obj->getSubGridY()) * 6,
-                'color' => Planet::$region_color[$planet_obj->getRegion()]
-            ];
-        }
-
-        return $result;
-    }
-    public static function check_if_present(string $name): bool {
-        global $cnx;
-
-        $query = "SELECT name FROM planet WHERE name = ?";
-
-        $stmt = $cnx->prepare($query);
-        $stmt->bindParam(1, $name);
-        $stmt->execute();
-        $fetch = $stmt->fetchAll();
-
-        return !empty($fetch);
-    }
+    /**
+     * Adds the planet to the database.
+     * Doesn't work if the $cnx isn't setup.
+     *
+     * @return void
+     */
     public function add_planet_to_db() : void {
         global $cnx;
 
@@ -255,6 +184,15 @@ class Planet
 
         $stmt->execute();
     }
+
+    /**
+     * Calculate the simple distance between two planets using their x and y coordinates.
+     *
+     * @param Planet $planet the planet to get the distance to.
+     *
+     * @return array an array of two elements :
+     * the distance in billion kilometers and in light years.
+     */
     public function getDistanceWith(Planet $planet): array {
         $p1_x = ($this->getX() + $this->getSubGridX()) * 6;
         $p1_y = ($this->getY() + $this->getSubGridY()) * 6;
@@ -269,6 +207,13 @@ class Planet
 
         return array($result_in_billion_km,$result_in_light_year);
     }
+
+    /**
+     * Get the url for the image of the planet from the site Wookipedia.
+     * If there is no image, it will use the no_image.png in the data/images file.
+     *
+     * @return string the url of the image.
+     */
     public function getImageUrl(): string {
         global $cnx;
 
@@ -283,5 +228,127 @@ class Planet
         $url = "https://static.wikia.nocookie.net/starwars/images/$first_md5/$second_md5/$image";
 
         return $url;
+    }
+
+    /**
+     * Completely clear the datas from the planet table of the database.
+     * Doesn't work if the $cnx isn't setup.
+     *
+     * @return void
+     */
+    public static function clear_planet_db(): void {
+        global $cnx;
+
+        $query = "TRUNCATE TABLE planet";
+
+        $stmt = $cnx->prepare($query);
+        $stmt->execute();
+    }
+
+    /**
+     * Create a Planet object from the given name using the datas of the database.
+     * Doesn't work if the $cnx isn't setup.
+     *
+     * @param string $name the planet's name.
+     *
+     * @return Planet|null if the planet is not in the database, return null.
+     */
+    public static function get_planet_from_name(string $name): ?Planet {
+        global $cnx;
+
+        $query = "SELECT * FROM planet WHERE name = ?";
+        $stmt = $cnx->prepare($query);
+
+        $stmt->bindParam(1, $name, PDO::PARAM_STR);
+
+        $stmt->execute();
+        $f = $stmt->fetchAll();
+
+        $f = $f[0];
+
+        if (empty($f)) {
+            return null;
+        }
+        return new Planet(
+            $f['name'],$f['image'],
+            $f['coord'],$f['x'],$f['y'],
+            $f['sunName'],
+            $f['subGridCoord'],$f['subGridX'],$f['subGridY'],
+            $f['region'],$f['sector'],$f['suns'],$f['moons'],
+            $f['position'],$f['distance'],$f['lengthDay'],$f['lengthYear'],
+            $f['diameter'],$f['gravity']);
+    }
+
+    /**
+     * Create an array containing the names of every planet in the database.
+     * Doesn't work if the $cnx isn't setup.
+     *
+     * @return array array of planet names as strings.
+     */
+    public static function get_every_planet_name(): array {
+        global $cnx;
+
+        $query = "SELECT name FROM planet";
+
+        $stmt = $cnx->prepare($query);
+        $stmt->execute();
+        $fetch = $stmt->fetchAll();
+
+        if (empty($fetch)) {
+            return [];
+        }
+
+        $result = array();
+        foreach ($fetch as $row) {
+            $result[] = strval($row['name']);
+        }
+
+        return $result;
+    }
+
+    /**
+     * Create an array containing information for every planet in the db used to generate the map,
+     * such as their x and y coordinates, their name, and their color based on their region.
+     * Doesn't work if the $cnx isn't setup.
+     *
+     * @return array an array containing 'name', 'x', 'y' and 'color' keys.
+     */
+    public static function get_every_planet_for_map(): array {
+        $result = array();
+        $planets = Planet::get_every_planet_name();
+
+        foreach ($planets as $planet) {
+            $planet_obj = Planet::get_planet_from_name($planet);
+
+            $result[] = [
+                'name' => $planet_obj->getName(),
+                'x' => ($planet_obj->getX()+$planet_obj->getSubGridX()) * 6,
+                'y' => ($planet_obj->getY()+$planet_obj->getSubGridY()) * 6,
+                'color' => Planet::$region_color[$planet_obj->getRegion()]
+            ];
+        }
+
+        return $result;
+    }
+
+    /**
+     * Check if a planet is in the database using its name.
+     * Doesn't work if the $cnx isn't setup.
+     *
+     * @param string $name the planet's name.
+     *
+     * @return bool true if exists in the database, if not : false.
+     */
+    public static function check_if_present(string $name): bool {
+        global $cnx;
+
+        $query = "SELECT name FROM planet WHERE name = ?";
+
+        $stmt = $cnx->prepare($query);
+        $stmt->bindParam(1, $name);
+        $stmt->execute();
+        $fetch = $stmt->fetchAll();
+
+        return !empty($fetch);
     }
 }

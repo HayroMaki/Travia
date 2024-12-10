@@ -52,6 +52,7 @@ h2, h3, h4, h5, h6 {
 #mainTitleLink {
     margin-right: auto;
     text-decoration: none;
+    padding-left: 0.5%;
 }
 
 #mainTitle {
@@ -208,9 +209,18 @@ img.circle {
     justify-content: center;
 }
 
+#map-spacer {
+    flex: 1 0 0px;
+    width: 25%;
+}
+
+#ticket-selector-container {
+    flex: 1 0 0px;
+    width: 25%;
+}
+
 #map-container {
     flex: 1 0 0px;
-    width: 100%;
     display: flex;
     justify-content: center;
 }

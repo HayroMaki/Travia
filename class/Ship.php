@@ -7,7 +7,6 @@ class Ship
     private string $camp;
     private float $speed_kmh;
     private int $capacity;
-
     public function __construct(int $id, string $name, string $camp, float $speed_kmh, int $capacity) {
         $this->id = $id;
         $this->name = $name;
@@ -15,40 +14,31 @@ class Ship
         $this->speed_kmh = $speed_kmh;
         $this->capacity = $capacity;
     }
-
     public function getId(): int {
         return $this->id;
     }
-
     public function getName(): string {
         return $this->name;
     }
-
     public function getCamp(): string {
         return $this->camp;
     }
-
     public function getSpeedKmh(): float {
         return $this->speed_kmh;
     }
-
     public function getCapacity(): int {
         return $this->capacity;
     }
-
     public function toString(): string {
         return "id:".$this->id . ", name:".$this->name . ", camp:".$this->camp . ", speed:".$this->speed_kmh . ", capacity:".$this->capacity;
     }
 
-    public static function clear_ship_db(): void {
-        global $cnx;
-
-        $query = "TRUNCATE TABLE ship";
-
-        $stmt = $cnx->prepare($query);
-        $stmt->execute();
-    }
-
+    /**
+     * Adds the ship to the database.
+     * Doesn't work if the $cnx isn't setup.
+     *
+     * @return void
+     */
     public function add_ship_to_db() : void {
         global $cnx;
 
@@ -62,6 +52,21 @@ class Ship
         $stmt->bindParam(":speed_kmh", $this->speed_kmh, PDO::PARAM_STR);
         $stmt->bindParam(":capacity", $this->capacity, PDO::PARAM_INT);
 
+        $stmt->execute();
+    }
+
+    /**
+     * Completely clear the datas from the ship table in the database.
+     * Doesn't work if the $cnx isn't setup.
+     *
+     * @return void
+     */
+    public static function clear_ship_db(): void {
+        global $cnx;
+
+        $query = "TRUNCATE TABLE ship";
+
+        $stmt = $cnx->prepare($query);
         $stmt->execute();
     }
 }

@@ -76,7 +76,11 @@
                     </div>
                 </div>
                 <div id="map-container">
+                    <div id="map-spacer"></div>
                     <div id="map"></div>
+                    <div id="ticket-selector-container">
+                        <form action="" method="post"></form>
+                    </div>
                 </div>
             </div>
         </div>

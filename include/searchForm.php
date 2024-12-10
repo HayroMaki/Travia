@@ -1,6 +1,6 @@
 <script type="text/javascript">
     // autocomplete function from : https://www.w3schools.com/howto/howto_js_autocomplete.asp
-    // Modified it a bit.
+    // Modified it a bit to accommodate to my needs :
     function autocomplete(inp, arr) {
         // The autocomplete function takes two arguments :
         // The text field element and the array of possible autocompleted values
@@ -115,14 +115,14 @@
         });
     }
 
+    // take the planet names array from the database :
     var planets = <?php echo json_encode(Planet::get_every_planet_name()); ?>
 </script>
 <div id="genDiv">
     <form action="redirectTravel.php" method="get" autocomplete="off">
         <?php
-        if (isset($error_msg)) {
-            echo "<p style='color: darkred; text-align: center' ><b>$error_msg</b></p>";
-        }
+            // If there is an error message, show it to the user :
+            if (isset($error_msg)) echo "<p style='color: darkred; text-align: center' ><b>$error_msg</b></p>";
         ?>
         <div class="autocomplete">
             <div>

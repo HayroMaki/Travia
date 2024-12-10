@@ -1,5 +1,10 @@
 <?php
-// Check if the user's order
+/*
+ * This part is only for Admin users, allowing him to generate/delete the database's data and check the logs.
+ * Only include if the user has the rights for those actions.
+ */
+
+// Check if there is an order from the user :
 if (isset($_GET)) {
     if (isset($_GET['order'])) {
         $order = $_GET['order'];
@@ -34,11 +39,18 @@ if (isset($_GET)) {
             include("scripts/deleteAll.php");
         }
 
-        // Go back to page without GET
-        //echo '<script type="text/javascript"> window.location="'.Tool::get_URL_wo_GET().'";</script>';
+        // Go back to page without GET after the creation is done.
+        echo '<script type="text/javascript"> window.location="'.Tool::get_URL_wo_GET().'";</script>';
     }
 } ?>
 
+<!--
+Create 4 buttons that allows the admin user to :
+ - Generate the tables in the database using the sql file (doing so will erase every data).
+ - Generate the datas inside the tables using the json files.
+ - Clear every data from the database.
+ - Check the logs from the database.
+ -->
 <div id="genDiv">
     <a href="?order=generateTables">
         <div class="GenButton">Generate<br>Tables</div>
