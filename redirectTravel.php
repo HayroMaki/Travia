@@ -32,6 +32,7 @@
         else {
             // Add a successful search log :
             Tool::add_search_log("Palpatine",$departure, $destination,true,"");
-            header('location: ./travel.php?Departure='.$departure.'&Destination='.$destination);
+            $ship = Ship::get_every_ship()[0]->getName();
+            header('location: ./travel.php?Departure='.$departure.'&Destination='.$destination.'&Ship='.$ship);
         }
     }

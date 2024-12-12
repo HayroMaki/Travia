@@ -6,6 +6,7 @@
 
     $departure = $_GET['Departure'];
     $destination = $_GET['Destination'];
+    $selected_shipper = $_GET['Ship'];
 
     if (empty($departure) || empty($destination)) {
         header('Location: index.php');
@@ -13,6 +14,7 @@
 
     $departure = strval($departure);
     $destination = strval($destination);
+    $selected_ship = strval($selected_shipper);
 
     $dep_obj = Planet::get_planet_from_name($departure);
     $dest_obj = Planet::get_planet_from_name($destination);
@@ -28,6 +30,10 @@
     list($distance_km,$distance_ly) = $dep_obj->getDistanceWith($dest_obj);
 
     $planets = json_encode(Planet::get_every_planet_for_map());
+    $ships = Ship::get_every_ship();
+    $selected_ship_obj = Ship::remove_ship_by_name($ships, $selected_ship);
+
+    $time = $selected_ship_obj->get_time($distance_km);
 ?>
 
 <html lang="fr">
@@ -56,15 +62,15 @@
                     </div>
                     <div class="travel-info">
                         <h2>Time</h2>
-                        <h2><span id="important">hh:mm</span></h2>
+                        <h2><span id="important"><?= $time[0] ?>:<?= $time[1] ?></span></h2>
                         <h2>Distance</h2>
                         <h2><span id="important"><?php echo round($distance_km,2) ?> billion km</span></h2>
                         <br>
                         <img class="travel-arrow" src="data/icons/travel_arrow.png" alt="arrow">
                         <br>
-                        <h2>Aboard the <span id="important">ship name</span></h2>
-                        <h2>Ticket price : <span id="important">x $</span></h2>
-                        <h3>Remaining tickets : x</h3>
+                        <h2>Aboard the <span id="important"><?= $selected_ship_obj->getName() ?></span></h2>
+                        <h2>Ticket price : <span id="important"><?= $selected_ship_obj->get_price($distance_km) ?> cred.</span></h2>
+                        <h3>Remaining tickets : <?= $selected_ship_obj->getCapacity() ?></h3>
                     </div>
                     <div class="planet-info">
                         <div class="planet-image">
@@ -88,13 +94,20 @@
         <div><h1 id="more-travels-title">More Interesting Travels</h1></div>
         <hr id="white-line">
 
-        <form action="?Departure=<?=$departure?>&Destination=<?=$destination?>" method="get">
-        <?php for ($i = 0; $i < 4; $i++) { ?>
-            <button class="non-selected-travel" formaction="">
-                <span><?= $departure ?> -> <?= $destination ?></span>
-                <span>hh:mm H</span>
-                <span>ticket price: x $</span>
-            </button>
+        <?php foreach ($ships as $ship) {
+            $s_time = $ship->get_time($distance_km);
+            ?>
+            <a href="travel.php?Departure=<?= $departure ?>&Destination=<?= $destination ?>&Ship=<?= $ship->getName() ?>" class="non-selected-travel-link">
+                <button class="non-selected-travel">
+                    <span><?= $departure ?> -> <?= $destination ?></span>
+                    <span>|</span>
+                    <span><?= $s_time[0] ?>:<?= $s_time[1] ?></span>
+                    <span>|</span>
+                    <span>aboard the <?= $ship->getName() ?></span>
+                    <span>|</span>
+                    <span>ticket price: <?= $ship->get_price($distance_km) ?> cred.</span>
+                </button>
+            </a>
         <?php } ?>
         </form>
 
@@ -189,7 +202,9 @@
                 }).addTo(map).bindPopup(
                     // Add the popup :
                     `<div class="planet-image lightbox-planet-image" style="width: 100px; height: 100px"><img class="circle" src="${planet.image}" alt="${planet.name} image"></div>` +
-                    `<div class='lightbox-planet-name'>${planet.name}</div>`
+                    `<div class='lightbox-planet-name'>${planet.name}</div>` +
+                    `<div class='lightbox-planet-text'>${planet.region}</div>` +
+                    `<div class='lightbox-planet-text lightbox-get-up'>${planet.sector}</div>`
                 );
 
                 // Store the departure and destination planets :

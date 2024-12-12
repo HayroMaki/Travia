@@ -69,4 +69,91 @@ class Ship
         $stmt = $cnx->prepare($query);
         $stmt->execute();
     }
+
+    /**
+     * Return an array of Ship object from the database.
+     * Doesn't work if the $cnx isn't setup.
+     *
+     * @return array an array of ship object.
+     */
+    public static function get_every_ship(): array {
+        global $cnx;
+
+        $query = "SELECT * FROM ship ORDER BY speed_kmh";
+
+        $stmt = $cnx->prepare($query);
+        $stmt->execute();
+
+        $fetch = $stmt->fetchAll();
+
+        if (empty($fetch)) {
+            return [];
+        }
+
+        $result = array();
+        foreach ($fetch as $row) {
+            $result[] = new Ship($row['id'], $row['name'], $row['camp'], $row['speed_kmh'], $row['capacity']);
+        }
+
+        return $result;
+    }
+
+    /**
+     *
+     *
+     * @param array $ships
+     * @param string $name
+     *
+     * @return Ship|null
+     */
+    public static function remove_ship_by_name(array &$ships, string $name): ?Ship {
+        foreach ($ships as $key => $ship) {
+            if ($ship->getName() === $name) {
+                // Store the removed ship :
+                $removedShip = $ship;
+                unset($ships[$key]);
+                // Re-index the array to maintain sequential keys :
+                $ships = array_values($ships);
+                return $removedShip;
+            }
+        }
+        return null;
+    }
+
+    /**
+     *
+     *
+     * @return void
+     */
+    public function get_time(float $distance): array {
+        // The $distance is in billion of km, so we need to change that into km :
+        $distance_km = $distance * pow(10,9);
+
+        $time = $distance_km/$this->getSpeedKmh();
+
+        $hour = floor($time);
+        $fraction = $time - $hour;
+
+        $minute = round($fraction * 60);
+        if ($minute < 10) {
+            $minute = "0" . $minute;
+        }
+
+        return [$hour, $minute];
+    }
+
+    public function get_price(float $distance): float {
+        $price = 100 * $distance;
+
+        $speed = $this->getSpeedKmh()/pow(10,9);
+
+        if ($speed > 1.08) {
+            $speed_modifier = $speed/1.08;
+            $price = $price + ($speed_modifier * $price);
+        } else {
+            $price = 2 * $price;
+        }
+
+        return round($price);
+    }
 }

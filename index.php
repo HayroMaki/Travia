@@ -57,10 +57,10 @@ if ($planets === false) {
         ?>
         <div id="genDiv">
             <p id="info"></p>
-            <div id="map"></div>
+            <div id="map" style="border-color: #111111"></div>
         </div>
         <?php
-            include("include/admin.php");
+            //include("include/admin.php");
         ?>
 
         <script>
@@ -131,14 +131,14 @@ if ($planets === false) {
             map.setMaxBounds(bounds);
 
             // Add the points :
-            // It is named "planetss" because naming it "planets" didn't work, reason unknown.
+            // It is named "planetss" because naming it "planets" didn't work, reason : unknown.
             const planetss = <?php echo $planets ?>;
 
             // Put every planet on the map :
             planetss.forEach(function(planet) {
                 const add = xy(planet.x, planet.y);
 
-                // Cannot have a space in an id/class name :
+                // Cannot have spaces or apostrophes in an id/class name :
                 const name_s = planet.name.replaceAll(" ", "-").replaceAll("'","");
 
                 const circle = L.circleMarker(add, {

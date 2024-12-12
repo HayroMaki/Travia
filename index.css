@@ -255,7 +255,8 @@ img.circle {
 .non-selected-travel {
     display:flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: flex-start;
+    gap: 2%;
     width: 80%;
     margin-right: auto;
     margin-left: auto;
@@ -269,7 +270,7 @@ img.circle {
 .non-selected-travel span {
     margin: 1% 0;
     color: white;
-    font-size: 30px;
+    font-size: 24px;
     text-align: center;
     font-family: Inter, sans-serif;
     font-weight: bold;
@@ -279,8 +280,21 @@ img.circle {
     margin-left: 1%;
 }
 
+.non-selected-travel span:nth-child(3) {
+    width: 7%;
+}
+
+.non-selected-travel span:nth-last-child(2) {
+    margin-left: auto;
+}
+
 .non-selected-travel span:last-child {
     margin-right: 1%;
+    width: 20%;
+}
+
+.non-selected-travel-link {
+    text-decoration: none;
 }
 
 div.leaflet-popup-tip {
