@@ -56,6 +56,7 @@ if ($planets === false) {
             include("include/searchForm.php");
         ?>
         <div id="genDiv">
+            <p id="info"></p>
             <div id="map"></div>
         </div>
         <?php
@@ -130,13 +131,15 @@ if ($planets === false) {
             map.setMaxBounds(bounds);
 
             // Add the points :
+            // It is named "planetss" because naming it "planets" didn't work, reason unknown.
             const planetss = <?php echo $planets ?>;
-
-            console.log(<?php echo $planets; ?>);
 
             // Put every planet on the map :
             planetss.forEach(function(planet) {
                 const add = xy(planet.x, planet.y);
+
+                // Cannot have a space in an id/class name :
+                const name_s = planet.name.replaceAll(" ", "-").replaceAll("'","");
 
                 const circle = L.circleMarker(add, {
                     radius: 3, // size of circle
@@ -146,10 +149,34 @@ if ($planets === false) {
                     fillColor: planet.color,
                     fillOpacity: 1,
                 }).addTo(map).bindPopup(
-                    // Add the popup :
+                    // Create the popup content :
                     `<div class="planet-image lightbox-planet-image" style="width: 100px; height: 100px"><img class="circle" src="${planet.image}" alt="${planet.name} image"></div>` +
-                    `<div class='lightbox-planet-name'>${planet.name}</div>`
+                    `<div class='lightbox-planet-name'>${planet.name}</div>`+
+                    `<div class='lightbox-planet-text'>${planet.region}</div>` +
+                    `<div class='lightbox-planet-text lightbox-get-up'>${planet.sector}</div>` +
+                    `<div class="lightbox-buttons-wrapper">` +
+                        `<button id="dep-${name_s}" class="lightbox-selection-button">Set as Dep.</button>` +
+                        `<button id="dest-${name_s}" class="lightbox-selection-button">Set as Dest.</button>` +
+                    `</div>`
                 );
+
+                circle.on('click', function() {
+                    // Get the departure and destination buttons :
+                    const popup = this.getPopup();
+                    const dep = popup._contentNode.querySelector(`#dep-${name_s}`);
+                    const dest = popup._contentNode.querySelector(`#dest-${name_s}`);
+
+                    // When clicked, put the planet's name in the form value :
+                    dep.addEventListener("click", function() {
+                        document.getElementById("formD").value = planet.name;
+                        popup.close();
+                    });
+
+                    dest.addEventListener("click",function() {
+                        document.getElementById("formA").value = planet.name;
+                        popup.close();
+                    });
+                });
 
                 // Add animation when hovering (circle gets bigger for easier interaction) :
                 circle.on('mouseover', function () {

@@ -308,10 +308,10 @@ class Planet
 
     /**
      * Create an array containing information for every planet in the db used to generate the map,
-     * such as their name, calculated x/y coordinates, image url, and color based on their region.
+     * such as their name, calculated x/y coordinates, image url, color based on their region, region and sector.
      * Doesn't work if the $cnx isn't setup.
      *
-     * @return array an array containing 'name', 'x', 'y', 'image' and 'color' keys.
+     * @return array an array containing 'name', 'x', 'y', 'image', 'color', 'region' and 'sector' keys.
      */
     public static function get_every_planet_for_map(): array {
         $result = array();
@@ -324,8 +324,10 @@ class Planet
                 'name' => $planet_obj->getName(),
                 'x' => ($planet_obj->getX()+$planet_obj->getSubGridX()) * 6,
                 'y' => ($planet_obj->getY()+$planet_obj->getSubGridY()) * 6,
-                'color' => Planet::$region_color[$planet_obj->getRegion()],
                 'image' => $planet_obj->getImageUrl(),
+                'color' => Planet::$region_color[$planet_obj->getRegion()],
+                'region' => $planet_obj->getRegion(),
+                'sector' => $planet_obj->getSector(),
             ];
         }
 
