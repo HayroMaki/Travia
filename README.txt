@@ -13,6 +13,8 @@ Done :
 - Map of travel in result page.
 - Popup of planets on the map.
 - Map on the search page, possibility to select a planet on it's popup.
+- Header and footer with links to main page and github.
+- Admin page to manage the DB.
 
 To Do :
 - Select a datetime of departure/arrival.
