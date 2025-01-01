@@ -8,7 +8,7 @@
 <html lang="fr">
     <head>
         <meta charset="UTF-8">
-        <title>Travia</title>
+        <title>Travia logs</title>
         <link href="index.css?v=<?php echo time(); ?>" rel="stylesheet">
     </head>
     <body>
@@ -23,5 +23,6 @@
                 </tr>
             <?php } ?>
         </table>
+        <?php include("include/footer.inc.php"); ?>
     </body>
 </html>

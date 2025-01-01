@@ -1,3 +1,8 @@
+<!--
+    This is not an include but not a real page either,
+    It is a kind of transition page that checks the validity of the entered planets,
+    And returns an error back to the search page or the travel.
+-->
 <?php
     require_once("include/setupPDO.php");
     require_once "./include/includeClasses.php";

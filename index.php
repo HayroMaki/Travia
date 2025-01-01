@@ -60,7 +60,9 @@ if ($planets === false) {
             <div id="map" style="border-color: #111111"></div>
         </div>
         <?php
+            //Activate only for admin accounts :
             //include("include/admin.php");
+            include("include/footer.inc.php");
         ?>
 
         <script>

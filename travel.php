@@ -260,6 +260,8 @@
             dep_planet_circle.bringToFront();
             dest_planet_circle.bringToFront();
         </script>
+
+        <?php include("include/footer.inc.php"); ?>
     </body>
 </html>
 

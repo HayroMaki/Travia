@@ -33,6 +33,14 @@ h2, h3, h4, h5, h6, p, td {
     justify-content: flex-end;
 }
 
+#footer {
+    height: 0px;
+    width: 100%;
+    background-color: black;
+    display: flex;
+    justify-content: center;
+}
+
 #white-line {
     margin-top: 0;
     border : 2px solid white;
@@ -100,6 +108,11 @@ h2, h3, h4, h5, h6, p, td {
 .GenButton:hover {
     background-color: midnightblue;
     border-color: dodgerblue;
+}
+
+.GenButton.footer {
+    width: 300px;
+    height: 25px;
 }
 
 .autocomplete {
@@ -270,7 +283,7 @@ img.circle {
 .non-selected-travel span {
     margin: 1% 0;
     color: white;
-    font-size: 24px;
+    font-size: 20px;
     text-align: center;
     font-family: Inter, sans-serif;
     font-weight: bold;
