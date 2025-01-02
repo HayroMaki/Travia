@@ -61,7 +61,7 @@ if ($planets === false) {
         </div>
         <?php
             //Activate only for admin accounts :
-            //include("include/admin.php");
+            include("include/admin.php");
             include("include/footer.inc.php");
         ?>
 
