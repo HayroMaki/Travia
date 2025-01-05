@@ -3,6 +3,7 @@
 class Planet
 {
     private string $name;
+    private string $camp;
     private ?string $image;
     private ?string $coord;
     private float $x;
@@ -43,7 +44,7 @@ class Planet
         "Wild Space" => "#fe60ad"
     ];
 
-    public function __construct(string $name, ?string $image,
+    public function __construct(string $name, string $camp, ?string $image,
                                 ?string $coord, float $x, float $y,
                                 ?string $sun_name,
                                 ?string $sub_grid_coord, float $sub_grid_x, float $sub_grid_y,
@@ -51,6 +52,7 @@ class Planet
                                 int $position, float $distance, float $length_day, float $length_year,
                                 float $diameter, float $gravity) {
         $this->name = $name;
+        $this->camp = $camp;
         $this->image = $image;
         $this->coord = $coord;
         $this->x = $x;
@@ -73,6 +75,10 @@ class Planet
     public function getName(): string
     {
         return $this->name;
+    }
+    public function getCamp(): string
+    {
+        return $this->camp;
     }
     public function getImage(): string
     {
@@ -156,13 +162,14 @@ class Planet
     public function add_planet_to_db() : void {
         global $cnx;
 
-        $query = "INSERT INTO planet (name,image,coord,x,y,sunName,subGridCoord,subGridX,subGridY,region,sector,suns,moons,position,distance,lengthDay,lengthYear,diameter,gravity) 
-                VALUES (:name, :images, :coord, :x, :y, :sun_name, :sub_grid_coord, :sub_grid_x, :sub_grid_y, :region, :sector, :suns, :moons, :position, :distance, :length_day, :length_year, :diameter, :gravity)
+        $query = "INSERT INTO planet (name,camp,image,coord,x,y,sunName,subGridCoord,subGridX,subGridY,region,sector,suns,moons,position,distance,lengthDay,lengthYear,diameter,gravity) 
+                VALUES (:name, :camp, :images, :coord, :x, :y, :sun_name, :sub_grid_coord, :sub_grid_x, :sub_grid_y, :region, :sector, :suns, :moons, :position, :distance, :length_day, :length_year, :diameter, :gravity)
                 ";
 
         $stmt = $cnx->prepare($query);
 
         $stmt->bindParam(':name', $this->name, PDO::PARAM_STR);
+        $stmt->bindParam(':camp', $this->camp, PDO::PARAM_STR);
         $stmt->bindParam(':images', $this->image, PDO::PARAM_STR);
         $stmt->bindParam(':coord', $this->coord, PDO::PARAM_STR);
         $stmt->bindParam(':x', $this->x, PDO::PARAM_STR);
@@ -270,7 +277,7 @@ class Planet
             return null;
         }
         return new Planet(
-            $f['name'],$f['image'],
+            $f['name'],$f['camp'],$f['image'],
             $f['coord'],$f['x'],$f['y'],
             $f['sunName'],
             $f['subGridCoord'],$f['subGridX'],$f['subGridY'],
@@ -353,5 +360,21 @@ class Planet
         $fetch = $stmt->fetchAll();
 
         return !empty($fetch);
+    }
+
+    /**
+     * @throws \Random\RandomException
+     */
+    public static function random_camp(): string {
+        switch (random_int(0,2)) {
+            case 0:
+                return "Rebelles";
+            case 1:
+                return "Empire";
+            case 2:
+                return "Contrebandiers";
+            default :
+                throw new Exception("Invalid random camp");
+        }
     }
 }

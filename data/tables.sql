@@ -45,6 +45,7 @@ DROP TABLE IF EXISTS `planet`;
 CREATE TABLE IF NOT EXISTS `planet` (
   `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` varchar(190) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `camp` varchar(190) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
   `image` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL,
   `coord` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
   `x` float NOT NULL,

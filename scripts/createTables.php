@@ -3,7 +3,7 @@
     global $cnx;
 
     // Create Database tables using the SQL file.
-    $query = file_get_contents("./data/tables.sql");
+    $query = file_get_contents("data/tables.sql");
 
     $stmt = $cnx->prepare($query);
     $stmt->execute();

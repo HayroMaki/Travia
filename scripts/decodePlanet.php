@@ -34,8 +34,14 @@
         if (isset($planet["SunName"])) $sun_name = $planet["SunName"]; else $sun_name = null;
         if (isset($planet["SubGridCoord"])) $sub_grid_coord = $planet["SubGridCoord"]; else $sub_grid_coord = null;
 
+        try {
+            $camp = Planet::random_camp();
+        } catch (Exception $e) {
+            $camp = "no_camp";
+        }
+
         $planet_obj = new Planet(
-            $planet["Name"], $image,
+            $planet["Name"], $camp, $image,
             $coord, $planet["X"], $planet["Y"],
             $sun_name,
             $sub_grid_coord, $planet["SubGridX"], $planet["SubGridY"],
