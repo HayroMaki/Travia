@@ -196,5 +196,7 @@ if ($planets === false) {
                 });
             });
         </script>
+
+        <?php require_once("include/background.php") ?>
     </body>
 </html>

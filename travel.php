@@ -261,7 +261,10 @@
             dest_planet_circle.bringToFront();
         </script>
 
-        <?php include("include/footer.inc.php"); ?>
+        <?php
+            include("include/footer.inc.php");
+            require_once("include/background.php");
+        ?>
     </body>
 </html>
 

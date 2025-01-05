@@ -170,6 +170,7 @@ div.autocomplete-active {
 }
 
 .planet-image {
+    z-index: 10;
     height: 200px;
     width: 200px;
     margin-bottom: 5%;
