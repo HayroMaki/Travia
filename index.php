@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 
 <?php
+    // Check or add the cart cookie :
+    if (!isset($_COOKIE['cart'])) {
+        setcookie('cart', serialize([]), time() + 7200, '/');
+    }
+
     // To prevent the program to stop due to memory usage or execution time :
     ini_set('memory_limit', '4096M');
     ini_set('max_execution_time', 0);
@@ -34,17 +39,26 @@
 
     $planets = json_encode(Planet::get_every_planet_for_map());
 
-if ($planets === false) {
-    echo "Erreur d'encodage JSON : " . json_last_error_msg();
-    die();
-}
+    if ($planets === false) {
+        echo "Erreur d'encodage JSON : " . json_last_error_msg();
+        die();
+    }
+
+    // Include cart :
+    include("cart/cart.php");
+    include("include/fontSelector.php");
 ?>
+
+<script>
+    loadFont();
+</script>
 
 <html lang="fr">
     <head>
         <meta charset="UTF-8">
         <title>Travia</title>
         <link href="index.css?v=<?php echo time(); ?>" rel="stylesheet">
+        <link rel="stylesheet" href="cart/cart.css">
 
         <!-- Leaflet -->
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>

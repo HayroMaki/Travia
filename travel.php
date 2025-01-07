@@ -1,7 +1,12 @@
 <!DOCTYPE html>
 
 <?php
-    require_once("include/setupPDO.php");
+    // Check or add the cart cookie :
+    if (!isset($_COOKIE['cart'])) {
+        setcookie('cart', serialize([]), time() + 7200, '/');
+    }
+
+    require_once "include/setupPDO.php";
     require_once "include/includeClasses.php";
 
     $departure = $_GET['Departure'];
@@ -34,13 +39,22 @@
     $selected_ship_obj = Ship::remove_ship_by_name($ships, $selected_ship);
 
     $time = $selected_ship_obj->get_time($distance_km);
+
+    // Include cart
+    include("cart/cart.php");
+    include("include/fontSelector.php");
 ?>
+
+<script>
+    loadFont();
+</script>
 
 <html lang="fr">
     <head>
         <meta charset="UTF-8">
         <title><?php echo ($departure." -> ".$destination) ?></title>
         <link rel="stylesheet" href="index.css?v=<?php echo time(); ?>">
+        <link rel="stylesheet" href="cart/cart.css">
 
         <!-- Leaflet -->
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
@@ -71,6 +85,10 @@
                         <h2>Aboard the <span id="important"><?= $selected_ship_obj->getName() ?></span></h2>
                         <h2>Ticket price : <span id="important"><?= $selected_ship_obj->get_price($distance_km) ?> cred.</span></h2>
                         <h3>Remaining tickets : <?= $selected_ship_obj->getCapacity() ?></h3>
+
+                        <a class="addToCartButton" href="cart/addToCart.php?departure=<?php echo $departure; ?>&arrival=<?php echo $destination; ?>&ship=<?php echo $selected_shipper; ?>">
+                            <b>Add to cart</b>
+                        </a>
                     </div>
                     <div class="planet-info">
                         <div class="planet-image">

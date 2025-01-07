@@ -1,4 +1,9 @@
 @font-face {
+    font-family: 'Aurebesh';
+    src: url(data/fonts/Aurebesh/Aurebesh.otf);
+}
+
+@font-face {
     font-family: Syne;
     src: url(data/fonts/Syne/static/Syne-Bold.ttf);
 }
@@ -6,6 +11,24 @@
 @font-face {
     font-family: Inter;
     src: url(data/fonts/Inter/Inter-VariableFont_opsz,wght.ttf);
+}
+
+/* Font Selector */
+
+.fontSelector {
+    position: fixed;
+    top: 15%;
+    left: 0;
+    padding: 10px;
+
+    background-color: #FFFFFF;
+    border: solid 5px #FFFFFF;
+    border-radius: 0px 10px 10px 0px;
+}
+
+.fontSelector:hover {
+    border: solid 5px #D9D9D9;
+    transition-duration: 250ms;
 }
 
 body {
