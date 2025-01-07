@@ -156,4 +156,23 @@ class Ship
 
         return round($price);
     }
+
+    public static function getShipFromName(String $name): ?Ship {
+        global $cnx;
+        $query = "SELECT * FROM ship WHERE name = ?";
+        $stmt = $cnx->prepare($query);
+
+        $stmt->bindParam(1, $name, PDO::PARAM_STR);
+
+        $stmt->execute();
+        $f = $stmt->fetchAll();
+
+        $f = $f[0];
+
+        if (empty($f)) {
+            return null;
+        }
+
+        return new Ship($f['id'], $f['name'], $f['camp'], $f['speed_kmh'], $f['capacity']);
+    }
 }

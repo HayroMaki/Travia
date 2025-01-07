@@ -1,6 +1,6 @@
 <?php
-global $departure;
-global $arrival;
+    global $departure;
+    global $arrival;
 ?>
 
 <script>
@@ -28,6 +28,7 @@ global $arrival;
                 echo "<b>You have ".count($cart)." items in your cart</b><br>";
                 echo "<a href='checkout.php'><b>Checkout</b></a><br>";
                 foreach ($cart as $item) {
+                    $ship = Ship::getShipFromName($item->getShip());
                     ?>
                     <div class="cartItem">
                         <div class="cartItemDeparture"><?php
@@ -46,7 +47,7 @@ global $arrival;
                             ?>
                             <form action="cart/changeQuantity.php" method="get">
                                 <input type="hidden" name="id" value="<?php echo $item->getId(); ?>">
-                                <input type="number" name="quantity" value="<?php echo $item->getQuantity(); ?>">
+                                <input type="number" name="quantity" value="<?php echo $item->getQuantity(); ?>" min="1" max="<?php echo $ship->getCapacity()?>">
                                 <input type="submit" value="Change">
                             </form>
                         </div>
