@@ -1,5 +1,8 @@
 A Star Wars Project.
 
+*You must have an up-to-date jdk to execute the .jar file.
+(for local development, put the jdk-X directory in the bin directory of wamp/xamp).
+
 Tasks :
 
 Done :
