@@ -17,10 +17,11 @@
 <div class="cart" onclick="showCart()">
     <img src="cart/cart.png" width="40">
 
-    <div class="cartDetail">
+    <div class="cartDetail" onclick="showCart()">
         <?php
         if (isset($_COOKIE['cart'])) {
             $cart = unserialize($_COOKIE['cart']);
+            echo "<div class='closeCart' onclick='showCart()'>X</div><br><br>";
             if (count($cart) == 0) {
                 echo '<p><b>Your cart is empty</b></p>';
             }

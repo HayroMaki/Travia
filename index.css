@@ -404,3 +404,145 @@ div.leaflet-popup-content {
     border-color: dodgerblue;
     cursor: pointer;
 }
+
+/* Checkout page */
+
+/* Ticket container */
+.ticket {
+    border: 1px solid #ffffff; /* White border */
+    font-family: Inter, sans-serif;
+    color: #FFFFFF;
+    padding: 20px;
+    width: 80%;
+    margin: 20px auto;
+    background-color: #101010; /* Slightly lighter background */
+    border-radius: 8px; /* Rounded corners */
+    font-size: x-large;
+    z-index: -1;
+}
+
+/* First row: Ticket info */
+.row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    position: relative;
+}
+
+.row > div:not(:last-child) {
+    border-right: 1px solid #ffffff; /* Vertical line between items */
+    padding-right: 15px; /* Add padding for space before the line */
+    margin-right: 15px; /* Space after the line */
+
+}
+
+/* Ticket info styles */
+.ticket-count {
+    font-weight: bold;
+}
+
+.route {
+//background-color: #3a3a3a; /* Background for the route */
+    padding: 5px 10px;
+//border-radius: 4px;
+}
+
+.aboard {
+    font-style: italic;
+}
+
+.price {
+    font-weight: bold;
+}
+
+/* Horizontal line */
+hr {
+    border: 0;
+    height: 1px;
+    background-color: #ffffff;
+    margin: 10px 0;
+}
+
+/* Details row */
+.details {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.details > div:not(:last-child) {
+    border-right: 1px solid #ffffff; /* Vertical line between details */
+    padding-right: 15px; /* Add padding for space before the line */
+    margin-right: 15px; /* Space after the line */
+}
+
+.details div {
+    flex: 1;
+    text-align: center;
+}
+
+.confirmation-popup {
+    display: none; /* Cache le pop-up par défaut */
+    position: fixed;
+    top: 40%;
+    left: 25%;
+    width: 50%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Fond semi-transparent */
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Placer le pop-up au-dessus de tout autre contenu */
+}
+
+.popup-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.popup-content p {
+    font-size: 18px;
+    margin-bottom: 20px;
+    color: black;
+}
+
+.confirm-button, .cancel-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    margin: 5px;
+    cursor: pointer;
+}
+
+.confirm-button {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.confirm-button:hover {
+    background-color: #45a049;
+}
+
+.cancel-button {
+    background-color: #f44336;
+    color: white;
+}
+
+.cancel-button:hover {
+    background-color: #e53935;
+}
+
+.buttonDelete {
+    /* Put at the center of page */
+    position: absolute;
+    left: 45%;
+}
+
+.buttonCheckout {
+    /* Put at the center of page */
+    position: absolute;
+    left: 55%;
+}
