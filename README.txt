@@ -1,8 +1,5 @@
 A Star Wars Project.
 
-*You must have an up-to-date jdk to execute the .jar file.
-(for local development, put the jdk-X directory in the bin directory of wamp/xamp).
-
 Tasks :
 
 Done :
@@ -18,22 +15,15 @@ Done :
 - Map on the search page, possibility to select a planet on it's popup.
 - Header and footer with links to main page and github.
 - Admin page to manage the DB.
-- Add a ticket to the cart.
-- Cart popup that shows every ticket in it.
-- Change a ticket from the cart (number of tickets).
-- Make A* in C.
-- Generate JSON(s) files for C executable in Java.
-- Read the JSON(s) in C to generate structures.
-- Launch C executable from Java.
 
 To Do :
+- Select a datetime of departure/arrival.
+- Add a ticket to the cart.
+- Cart page that shows every ticket in it.
+- Change a ticket from the cart (options/number of tickets).
 - Validate an order.
 - Order page that shows every order.
-- Launch Java executable from php code.
-- Get the generated path by C executable in php.
-- Show the generated path on the map in the travel page.
+- Download the tickets as pdf file.
 
 Maybe Do :
-- Select a datetime of departure/arrival.
-- Download the tickets as pdf file.
 - Change planet of departure/destination from the result page's map.
