@@ -85,34 +85,4 @@ class Tool
         $stmt->execute();
         return $stmt->fetchAll();
     }
-
-    /**
-     * Get the id in the DB of the searched travel based on the departure and destination planets ids,
-     * the selected type of cost and the filters, or null if not present.
-     *
-     * @param int $dep the departure planet id.
-     * @param int $dest the destination planet id.
-     * @param String $cost the cost type (either "Distance","Price" or "Speed").
-     * @param String $filters the filters separated with commas (ex: "Empire,Rebelles");
-     * @return int|null the travel id in the DB or null if not found.
-     */
-    public static function check_travel(int $dep, int $dest, String $cost, String $filters): ?int {
-        global $cnx;
-
-        $query = "SELECT * FROM travel WHERE departure = :dep AND destination = :dest AND cost = :cost AND filters = :filters";
-        $stmt = $cnx->prepare($query);
-
-        $stmt->bindParam(':dep', $dep, PDO::PARAM_STR);
-        $stmt->bindParam(':dest', $dest, PDO::PARAM_STR);
-        $stmt->bindParam(':cost', $cost, PDO::PARAM_STR);
-        $stmt->bindParam(':filters', $filters, PDO::PARAM_STR);
-
-        $stmt->execute();
-        $result = $stmt->fetch();
-
-        if (empty($result)) {
-            return null;
-        }
-        return $result;
-    }
 }
