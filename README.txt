@@ -34,6 +34,7 @@ To Do :
 - Show the generated path on the map in the travel page.
 
 Maybe Do :
+- Switch from Human to Aurebesh font.
 - Select a datetime of departure/arrival.
 - Download the tickets as pdf file.
 - Change planet of departure/destination from the result page's map.

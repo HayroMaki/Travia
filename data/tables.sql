@@ -117,6 +117,27 @@ CREATE TABLE IF NOT EXISTS `trip` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 COMMIT;
 
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `travel`
+--
+
+DROP TABLE IF EXISTS `travel`;
+CREATE TABLE IF NOT EXISTS `travel` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `time` double NOT NULL,
+  `price` double NOT NULL,
+  `distance` double NOT NULL,
+  `departure` int NOT NULL,
+  `destination` int NOT NULL,
+  `cost` varchar(190) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `filters` varchar(190) COLLATE utf8mb4_bin NOT NULL,
+  `txt` varchar(190) COLLATE utf8mb4_bin NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+COMMIT;
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
