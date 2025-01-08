@@ -546,3 +546,19 @@ hr {
     position: absolute;
     left: 55%;
 }
+
+.filters{
+    color: white;
+}
+
+.option{
+    display: flex;
+    flex-direction: column;
+    color: white;
+}
+
+.option_selection{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}

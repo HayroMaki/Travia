@@ -147,6 +147,30 @@
                 <input type="submit" value="OK">
             </div>
         </div>
+        <div class="option_selection">
+            <div class="filters">
+                <input type="checkbox" id="filter1" name="filter1" value="Empire">
+                <label for="filter1"> Empire</label><br>
+                <input type="checkbox" id="filter2" name="filter2" value="Rebelles">
+                <label for="filter2"> Rebel</label><br>
+                <input type="checkbox" id="filter3" name="filter3" value="Contrebandiers">
+                <label for="filter3"> Smugglers</label><br><br>
+            </div>
+            <div class="option">
+                <div>
+                    <input type="radio" id="dist" name="option" value="Distance" checked />
+                    <label for="dist">By Distance</label>
+                </div>
+                <div>
+                    <input type="radio" id="speed" name="option" value="Vitesse" checked />
+                    <label for="speed">By Speed</label>
+                </div>
+                <div>
+                    <input type="radio" id="time" name="option" value="Temps" checked />
+                    <label for="time">By Time</label>
+                </div>
+            </div>
+        </div>
     </form>
 </div>
 <script type="text/javascript">
