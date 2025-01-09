@@ -113,6 +113,9 @@ foreach ($cart as $item) {
     </div>
 </div>
 
+<br>
+<br>
+
 <script>
     function showConfirmation() {
         var popup = document.getElementById("confirmation-popup");
@@ -135,6 +138,9 @@ foreach ($cart as $item) {
     }
 </script>
 
-<?php require_once("include/background.php") ?>
+<?php
+include("include/footer.inc.php");
+require_once("include/background.php")
+?>
 </body>
 </html>
