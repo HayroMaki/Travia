@@ -287,6 +287,40 @@ class Planet
     }
 
     /**
+     * Create a Planet object from the given id using the datas of the database.
+     * Doesn't work if the $cnx isn't setup.
+     *
+     * @param int $id the planet's id.
+     *
+     * @return Planet|null if the planet is not in the database, return null.
+     */
+    public static function get_planet_from_id(int $id): ?Planet {
+        global $cnx;
+
+        $query = "SELECT * FROM planet WHERE id = ?";
+        $stmt = $cnx->prepare($query);
+
+        $stmt->bindParam(1, $id, PDO::PARAM_INT);
+
+        $stmt->execute();
+        $f = $stmt->fetchAll();
+
+        $f = $f[0];
+
+        if (empty($f)) {
+            return null;
+        }
+        return new Planet(
+            $f['name'],$f['camp'],$f['image'],
+            $f['coord'],$f['x'],$f['y'],
+            $f['sunName'],
+            $f['subGridCoord'],$f['subGridX'],$f['subGridY'],
+            $f['region'],$f['sector'],$f['suns'],$f['moons'],
+            $f['position'],$f['distance'],$f['lengthDay'],$f['lengthYear'],
+            $f['diameter'],$f['gravity']);
+    }
+
+    /**
      * Create an array containing the names of every planet in the database.
      * Doesn't work if the $cnx isn't setup.
      *
