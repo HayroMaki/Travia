@@ -1,14 +1,5 @@
 <!DOCTYPE html>
 
-<?php
-
-// To prevent the program to stop due to memory usage or execution time :
-ini_set('memory_limit', '4096M');
-ini_set('max_execution_time', 0);
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
-?>
-
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
@@ -36,17 +27,19 @@ include("include/header.inc.php");
         <div class="box"><img class="jg" src="images/guillaume.png">Guillaume Augeraud<br><div class="role">Technical Leader</div></div>
     </a>
     <a href="https://www.linkedin.com/in/a-achirecesei/" target="_blank">
-        <div class="box"><img src="images/andrei.png">Andrei Achirecesei<br><div class="role">Developer</div></div>
+        <div class="box"><img src="images/andrei.png">Andrei Achirecesei<br><div class="role">Developper</div></div>
     </a>
     <a href="https://www.linkedin.com/in/rissot/" target="_blank">
-        <div class="box"><img class="b" src="images/benjamin.jpg">Benjamin Rissot<br><div class="role">Developer</div></div>
+        <div class="box"><img class="b" src="images/benjamin.jpg">Benjamin Rissot<br><div class="role">Developper</div></div>
     </a>
 </div>
 
 <p>
     Welcome on Travia ! A Star-Wars themed university project to find the best intergalactic trips.<br>
-    We are four second year students in computer science at IUT de Marne-la-Vallée, Université Gustave Eiffel.<br>
+    We are four second year students in computer science at University Gustave Eiffel.<br>
     This site was built using various languages such as PHP, Javascript, Java, C and exploiting algorithms like A-star.<br>
+    <br>
+    We use libraries : leaflet for the map and cJSON for reading data's in C.<br>
 </p>
 
 <p>
