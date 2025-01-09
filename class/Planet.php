@@ -319,6 +319,7 @@ class Planet
         global $cnx;
 
         $query = "SELECT * FROM planet WHERE id = ?";
+        print_r($query);
         $stmt = $cnx->prepare($query);
 
         $stmt->bindParam(1, $id, PDO::PARAM_INT);

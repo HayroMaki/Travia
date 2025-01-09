@@ -9,13 +9,16 @@
     require_once "include/setupPDO.php";
     require_once "include/includeClasses.php";
 
-    $departure = $_GET['Departure'];
-    $destination = $_GET['Destination'];
-    $selected_shipper = $_GET['Ship'];
+    $travel_id = $_GET['travel'];
+    $selected_shipper = $ship = Ship::get_every_ship()[0]->getName();
 
-    if (empty($departure) || empty($destination)) {
+    if (empty($travel_id)) {
         header('Location: index.php');
     }
+
+    $travel = Travel::getTravelFromId($travel_id);
+    $departure = $travel->getDeparture();
+    $destination = $travel->getDestination();
 
     $departure = strval($departure);
     $destination = strval($destination);

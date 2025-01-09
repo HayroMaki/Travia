@@ -80,7 +80,7 @@ class Travel {
         $result = $stmt->fetch();
 
         if (empty($result)) {
-            return null;
+            return -1;
         }
         return $result;
     }
@@ -110,4 +110,26 @@ class Travel {
             $f["departure"],$f["destination"],
             $f["cost"],$f["filters"],$f["txt"]);
     }
+
+    public static function addTravel(string $time, float $price, float $distance, int $departure, int $destination, string $cost, string $filters, string $txt): void {
+        global $cnx;
+
+        $insert = "INSERT INTO travel VALUES(0,:time,:price,:distance,:departure,:destination,:cost,:filters,:txt)";
+
+        $stmt = $cnx->prepare($insert);
+
+        $stmt->bindParam(':time', $time, PDO::PARAM_STR);
+        $stmt->bindParam(':price', $price);
+        $stmt->bindParam(':distance', $distance);
+        $stmt->bindParam(':departure', $departure, PDO::PARAM_INT);
+        $stmt->bindParam(':destination', $destination, PDO::PARAM_INT);
+        $stmt->bindParam(':cost', $cost, PDO::PARAM_STR);
+        $stmt->bindParam(':filters', $filters, PDO::PARAM_STR);
+        $stmt->bindParam(':txt', $txt,PDO::PARAM_STR);
+
+        $stmt->execute();
+
+
+    }
+
 }

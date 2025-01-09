@@ -5,3 +5,4 @@ include "class/Planet.php";
 include "class/Trip.php";
 include "class/Tool.php";
 include "class/cart.php";
+include "class/Travel.php";

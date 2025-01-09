@@ -7,8 +7,8 @@ class Trip
     private string $departure_day;
     private string $departure_time;
     private int $ship_id;
-    private int $distance;
-    private int $price;
+    private float $distance;
+    private float $price;
     private array $time;
 
     public function __construct(int $departure_planet_id, int $destination_planet_id, string $departure_day, string $departure_time, int $ship_id)
@@ -95,18 +95,18 @@ class Trip
         } else return null;
     }
 
-    private function get_time() : array{
+    public function get_time() : array{
         return $this->time;
     }
 
     private function set_price() : float{
         $ship = Ship::getShipFromId($this->ship_id);
         if ($ship != null) {
-            return $ship->get_price($this->price);
+            return $ship->get_price($this->distance);
         } return -1;
     }
 
-    private function get_price() : float{
+    public function get_price() : float{
         return $this->price;
     }
 

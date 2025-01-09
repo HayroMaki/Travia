@@ -126,7 +126,7 @@ COMMIT;
 DROP TABLE IF EXISTS `travel`;
 CREATE TABLE IF NOT EXISTS `travel` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `time` double NOT NULL,
+  `time` varchar(190) NOT NULL,
   `price` double NOT NULL,
   `distance` double NOT NULL,
   `departure` int NOT NULL,
