@@ -237,6 +237,27 @@ class Planet
         return $url;
     }
 
+    public static function getTripWith(int $dep, int $dest): ?Trip {
+        global $cnx;
+
+        $query = "SELECT * FROM trip WHERE departurePlanetId = :dep AND destinationPlanetId = :dest";
+
+        $stmt = $cnx->prepare($query);
+        $stmt->bindParam(':dep',$dep, PDO::PARAM_INT);
+        $stmt->bindParam(':dest',$dest, PDO::PARAM_INT);
+        $stmt->execute();
+        $f = $stmt->fetchAll();
+
+        $f = $f[0];
+
+        if (empty($f)) {
+            return null;
+        }
+        return new Trip($f['departurePlanetId'],$f['destinationPlanetId'],
+            $f['departureDay'],$f['departureTime'],
+            $f['shipId']);
+    }
+
     /**
      * Completely clear the datas from the planet table of the database.
      * Doesn't work if the $cnx isn't setup.
