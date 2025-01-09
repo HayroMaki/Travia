@@ -151,9 +151,9 @@
             <div class="filters">
                 <input type="checkbox" id="filter1" name="filter1" value="Empire">
                 <label for="filter1"> Empire</label><br>
-                <input type="checkbox" id="filter2" name="filter2" value="Rebelles">
+                <input type="checkbox" id="filter2" name="filter3" value="Rebelles">
                 <label for="filter2"> Rebel</label><br>
-                <input type="checkbox" id="filter3" name="filter3" value="Contrebandiers">
+                <input type="checkbox" id="filter3" name="filter2" value="Contrebandiers">
                 <label for="filter3"> Smugglers</label><br><br>
             </div>
             <div class="option">

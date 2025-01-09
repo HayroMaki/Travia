@@ -34,6 +34,17 @@
 
         } else if ($_GET['error'] == "same_fields") {
             $error_msg = "Please don't select the same planet as departure and destination.";
+
+        } else if ($_GET['error'] == "option") {
+            $error_msg = "Please choose at least one filter.";
+        }
+
+        else if ($_GET['error'] == "travel") {
+            $error_msg = "There are no current travel with your filter.";
+        }
+
+        else if ($_GET['error'] == "prog") {
+            $error_msg = "Problem with the programme.";
         }
     }
 
