@@ -443,6 +443,31 @@ class Planet
     }
 
     /**
+     * Get the name from the given id using the datas of the database.
+     *
+     * @param int $id the planet's name.
+     * @return int|null the id or null if not found.
+     */
+    public static function get_name_from_id(int $id): ?string {
+        global $cnx;
+
+        $query = "SELECT name FROM planet WHERE id = ?";
+        $stmt = $cnx->prepare($query);
+
+        $stmt->bindParam(1, $i, PDO::PARAM_INT);
+
+        $stmt->execute();
+        $f = $stmt->fetchAll();
+
+        $f = $f[0];
+
+        if (empty($f)) {
+            return null;
+        }
+        return $f['name'];
+    }
+
+    /**
      * @throws \Random\RandomException
      */
     public static function random_camp(): string {
