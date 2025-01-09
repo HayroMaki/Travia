@@ -7,6 +7,9 @@ class Trip
     private string $departure_day;
     private string $departure_time;
     private int $ship_id;
+    private int $distance;
+    private int $price;
+    private array $time;
 
     public function __construct(int $departure_planet_id, int $destination_planet_id, string $departure_day, string $departure_time, int $ship_id)
     {
@@ -15,6 +18,9 @@ class Trip
         $this->departure_day = $departure_day;
         $this->departure_time = $departure_time;
         $this->ship_id = $ship_id;
+        $this->distance = $this->set_distance();
+        $this->price = $this->set_price();
+        $this->time = $this->set_time();
     }
     public function getDeparturePlanetId(): int
     {
@@ -68,6 +74,40 @@ class Trip
         if (!$stmt->execute()) {
             print_r($stmt->errorInfo()); // Affiche l'erreur SQL
         }
+    }
+
+    private function set_distance() : float{
+        $dep = Planet::get_planet_from_id($this->departure_planet_id);
+        $dest = Planet::get_planet_from_id($this->destination_planet_id);
+        if ($dep != null && $dest != null) {
+            return $dep->getDistanceWith($dest)[0];
+        } else return -1;
+    }
+
+    public function getDistance() : float{
+        return $this->distance;
+    }
+
+    private function set_time() : ?array{
+        $ship = Ship::getShipFromId($this->ship_id);
+        if ($ship != null) {
+            return $ship->get_time($this->distance);
+        } else return null;
+    }
+
+    private function get_time() : array{
+        return $this->time;
+    }
+
+    private function set_price() : float{
+        $ship = Ship::getShipFromId($this->ship_id);
+        if ($ship != null) {
+            return $ship->get_price($this->price);
+        } return -1;
+    }
+
+    private function get_price() : float{
+        return $this->price;
     }
 
     /**

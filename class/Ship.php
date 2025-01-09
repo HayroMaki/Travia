@@ -175,4 +175,23 @@ class Ship
 
         return new Ship($f['id'], $f['name'], $f['camp'], $f['speed_kmh'], $f['capacity']);
     }
+
+    public static function getShipFromId(String $id): ?Ship {
+        global $cnx;
+        $query = "SELECT * FROM ship WHERE id = ?";
+        $stmt = $cnx->prepare($query);
+
+        $stmt->bindParam(1, $id, PDO::PARAM_INT);
+
+        $stmt->execute();
+        $f = $stmt->fetchAll();
+
+        $f = $f[0];
+
+        if (empty($f)) {
+            return null;
+        }
+
+        return new Ship($f['id'], $f['name'], $f['camp'], $f['speed_kmh'], $f['capacity']);
+    }
 }
