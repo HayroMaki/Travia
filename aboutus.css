@@ -1,0 +1,57 @@
+h1 {
+    text-align: center;
+    font-family: Syne, sans-serif;
+    font-size: 3em;
+    color: #FFFFFF;
+}
+
+.photos {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+a {
+    text-decoration: none;
+}
+
+.box {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+
+    margin: 20px;
+
+    color: #FFFFFF;
+    font-family: Syne, sans-serif;
+    font-size: 1.5em;
+}
+
+.box:hover {
+    transform: scale(1.2);
+    transition: transform 0.5s;
+}
+
+.role {
+    font-family: Inter, sans-serif;
+    font-size: 1em;
+    color: #a8a8a8;
+    margin-top: 5px;
+}
+
+.jg {
+    border-bottom: 5px solid white;
+}
+
+.b {
+    border: 5px solid white;
+}
+
+p {
+    text-align: center;
+    font-family: Inter, sans-serif;
+    font-size: 1.2em;
+    color: #FFFFFF;
+}
