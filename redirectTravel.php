@@ -60,9 +60,7 @@ global$cnx; <!--
         else {
             // Add a successful search log :
             Tool::add_search_log("Palpatine",$departure, $destination,true,"");
-            $ship = Ship::get_every_ship()[0]->getName();
-
-            header('location: ./travel.php?Departure='.$departure.'&Destination='.$destination);
+            header("location: ./travel.php?travel=$check");
         }
 
 

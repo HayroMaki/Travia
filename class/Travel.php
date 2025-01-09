@@ -2,7 +2,7 @@
 
 class Travel {
     private int $id;
-    private float $time;
+    private array $time;
     private float $price;
     private float $distance;
     private int $departure;
@@ -11,7 +11,7 @@ class Travel {
     private String $filters;
     private array $path;
 
-    public function __construct(int $id, float $time, float $price, float $distance, int $departure, int $destination, int $cost, string $filters, string $txt) {
+    public function __construct(int $id, array $time, float $price, float $distance, int $departure, int $destination, string $cost, string $filters, string $txt) {
         $this->id = $id;
         $this->time = $time;
         $this->price = $price;
@@ -26,7 +26,7 @@ class Travel {
     public function getId(): int {
         return $this->id;
     }
-    public function getTime(): float {
+    public function getTime(): array {
         return $this->time;
     }
     public function getPrice(): float {
@@ -68,7 +68,7 @@ class Travel {
     public static function check_travel(int $dep, int $dest, String $cost, String $filters): ?int {
         global $cnx;
 
-        $query = "SELECT * FROM travel WHERE departure = :dep AND destination = :dest AND cost = :cost AND filters = :filters";
+        $query = "SELECT id FROM travel WHERE departure = :dep AND destination = :dest AND cost = :cost AND filters = :filters";
         $stmt = $cnx->prepare($query);
 
         $stmt->bindParam(':dep', $dep, PDO::PARAM_STR);
@@ -100,13 +100,17 @@ class Travel {
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
         $f = $stmt->fetch();
-        $f = $f[0];
 
         if (empty($f)) {
             return null;
         }
+
+        $time_string = trim($f["time"], "[]");
+        $values = explode(",", $time_string);
+        $time_array = array_map('intval', $values);
+
         return new Travel($f["id"],
-            $f["time"],$f["price"],$f["distance"],
+            $time_array,$f["price"],$f["distance"],
             $f["departure"],$f["destination"],
             $f["cost"],$f["filters"],$f["txt"]);
     }
@@ -128,8 +132,6 @@ class Travel {
         $stmt->bindParam(':txt', $txt,PDO::PARAM_STR);
 
         $stmt->execute();
-
-
     }
 
 }

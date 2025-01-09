@@ -19,29 +19,21 @@
     $travel = Travel::getTravelFromId($travel_id);
     $departure = $travel->getDeparture();
     $destination = $travel->getDestination();
+    $distance = $travel->getDistance();
+    $price = $travel->getPrice();
+    $time = $travel->getTime();
+    $path = $travel->getPath();
 
-    $departure = strval($departure);
-    $destination = strval($destination);
     $selected_ship = strval($selected_shipper);
 
-    $dep_obj = Planet::get_planet_from_name($departure);
-    $dest_obj = Planet::get_planet_from_name($destination);
-
-    $dep_x = ($dep_obj->getX()+$dep_obj->getSubGridX()) * 6;
-    $dep_y = ($dep_obj->getY()+$dep_obj->getSubGridY()) * 6;
-    $dest_x = ($dest_obj->getX()+$dest_obj->getSubGridX()) * 6;
-    $dest_y = ($dest_obj->getY()+$dest_obj->getSubGridY()) * 6;
-
-    $dep_coord_str = round($dep_x,2).", ".round($dep_y,2);
-    $dest_coord_str = round($dest_x,2).", ".round($dest_y,2);
+    $dep_obj = Planet::get_planet_from_id($departure);
+    $dest_obj = Planet::get_planet_from_id($destination);
 
     list($distance_km,$distance_ly) = $dep_obj->getDistanceWith($dest_obj);
 
     $planets = json_encode(Planet::get_every_planet_for_map());
     $ships = Ship::get_every_ship();
     $selected_ship_obj = Ship::remove_ship_by_name($ships, $selected_ship);
-
-    $time = $selected_ship_obj->get_time($distance_km);
 
     // Include cart
     include("cart/cart.php");
@@ -81,7 +73,7 @@
                         <h2>Time</h2>
                         <h2><span id="important"><?= $time[0] ?>:<?= $time[1] ?></span></h2>
                         <h2>Distance</h2>
-                        <h2><span id="important"><?php echo round($distance_km,2) ?> billion km</span></h2>
+                        <h2><span id="important"><?php echo round($distance,2) ?> billion km</span></h2>
                         <br>
                         <img class="travel-arrow" src="data/icons/travel_arrow.png" alt="arrow">
                         <br>
@@ -112,10 +104,13 @@
             </div>
         </div>
 
+        <!--
         <div><h1 id="more-travels-title">More Interesting Travels</h1></div>
         <hr id="white-line">
+        -->
 
-        <?php foreach ($ships as $ship) {
+
+        <?php /* foreach ($ships as $ship) {
             $s_time = $ship->get_time($distance_km);
             ?>
             <a href="travel.php?Departure=<?= $departure ?>&Destination=<?= $destination ?>&Ship=<?= $ship->getName() ?>" class="non-selected-travel-link">
@@ -129,7 +124,7 @@
                     <span>ticket price: <?= $ship->get_price($distance_km) ?> cred.</span>
                 </button>
             </a>
-        <?php } ?>
+        <?php } */?>
         </form>
 
         <script>

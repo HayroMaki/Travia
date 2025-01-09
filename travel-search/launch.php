@@ -57,6 +57,7 @@ exec($command, $output, $returnCode);
 if ($returnCode === 0) {
 
 } else {
+    Tool::add_search_log("Palpatine",Planet::get_name_from_id($id_dep), Planet::get_name_from_id($id_end),false,"Program failed");
     header("location: ../index.php?error=prog");
 }
 
@@ -65,7 +66,7 @@ if ($returnCode === 0) {
 fopen($txt,'r');
 $string=file($txt)[0];
 if ($string == "[]") {
-    Tool::add_search_log("Palpatine",$departure, $destination,false,"No travel found");
+    Tool::add_search_log("Palpatine",Planet::get_name_from_id($id_dep), Planet::get_name_from_id($id_end),false,"No travel found");
     header("location: ../index.php?error=travel");
 } else {
 
@@ -74,7 +75,6 @@ if ($string == "[]") {
     $values = explode(",", $modifiedString);
     $idTable = array_map('intval', $values); //The table with all the id
     $lenTable = count($idTable);
-    print_r($idTable);
 
     //Get all data from the trips
     $distance = 0;
@@ -106,6 +106,7 @@ if ($string == "[]") {
     Travel::addTravel($time_string, $price, $distance, $id_dep, $id_end, $opt, $filters, substr($txt,2,strlen($txt)-2));
     $id = Tool::get_last_ai_id();
 
+    Tool::add_search_log("Palpatine",Planet::get_name_from_id($id_dep), Planet::get_name_from_id($id_end),true,"");
     header("location: ../travel.php?travel=$id");
 }
 
