@@ -25,10 +25,7 @@
     $price = $travel->getPrice();
     $time = $travel->getTime();
     $path = $travel->getPath();
-    print_r($travel);
     $path_name = json_encode(Planet::planetArrayName($path));
-    print_r($path);
-    print_r($path_name);
 
     $selected_ship = strval($selected_shipper);
 

@@ -33,17 +33,17 @@ $jarPath = 'Travia.jar';
 
 //Create the command to execute the jar, the txt name, and an string representing an array for the database
 if ($len == 1) {
-    $command = "java -jar " . $jarPath . " localhost travia \"Implius\" \"Pepette8;\" " . $id_dep . " " . $id_end . " " . $opt . " " . $array_filters[0];
+    $command = "java -jar " . $jarPath . " localhost travia \"Id_db\" \"Mdp_db\" " . $id_dep . " " . $id_end . " " . $opt . " " . $array_filters[0];
     $filters="[$filter1]";
     $txt="./cache_".$id_dep."-".$id_end."_".$opt."_".$array_filters[0].".txt";
 }
 if ($len == 2) {
-    $command = "java -jar " . $jarPath . " localhost travia \"Implius\" \"Pepette8;\" " . $id_dep . " " . $id_end . " " . $opt . " " . $array_filters[0] . "," . $array_filters[1];
+    $command = "java -jar " . $jarPath . " localhost travia \"Id_db\" \"Mdp_db\" " . $id_dep . " " . $id_end . " " . $opt . " " . $array_filters[0] . "," . $array_filters[1];
     $filters="[$filter1,$filter2]";
     $txt="./cache_".$id_dep."-".$id_end."_".$opt."_".$array_filters[0].",".$array_filters[1].".txt";
 }
 if ($len == 3) {
-    $command = "java -jar " . $jarPath . " localhost travia \"Implius\" \"Pepette8;\" " . $id_dep . " " . $id_end . " " . $opt . " " . $array_filters[0] . "," . $array_filters[1] . "," . $array_filters[2];
+    $command = "java -jar " . $jarPath . " localhost travia \"Id_db\" \"Mdp_bd\" " . $id_dep . " " . $id_end . " " . $opt . " " . $array_filters[0] . "," . $array_filters[1] . "," . $array_filters[2];
     $filters="[$filter1,$filter2]";
     $txt="./cache_".$id_dep."-".$id_end."_".$opt."_".$array_filters[0].",".$array_filters[1].",".$array_filters[2].".txt";
 }
