@@ -51,7 +51,9 @@ class Travel {
      * @return array the array of the path's planets ids.
      */
     public static function toPath(String $path): array {
-        return explode(",", str_replace("[","",str_replace("]","",$path)));
+        $modifiedString = trim($path, "[]");
+        $values = explode(",", $modifiedString);
+        return array_map('intval', $values);
     }
 
     /**
@@ -82,7 +84,7 @@ class Travel {
         if (empty($result)) {
             return -1;
         }
-        return $result;
+        return $result["id"];
     }
 
     /**

@@ -18,13 +18,23 @@ global$cnx; <!--
     $filter1 = $_GET['filter1'] ?? null;
     $filter2 = $_GET['filter2'] ?? null;
     $filter3 = $_GET['filter3'] ?? null;
-    $array = [$filter1, $filter2, $filter3];
+    $array = array();
+    if (!$filter1 == null){
+        array_push($array, $filter1);
+    }
+    if (!$filter2 == null){
+        array_push($array, $filter2);
+    }
+    if (!$filter3 == null){
+        array_push($array, $filter3);
+    }
     $len = count($array);
     if ($len == 1) $filters="[$filter1]";
     if ($len == 2) $filters="[$filter1,$filter2]";
-    if ($len == 3) $filters="[$filter1,$filter2]";
+    if ($len == 3) $filters="[$filter1,$filter2,$filter3]";
 
     $check = Travel::check_travel($id_dep,$id_end,$option,$filters);
+    print_r($check);
 
     // Check that the fields aren't null,
     // if not, head back to index with the empty_fields error :
@@ -52,7 +62,7 @@ global$cnx; <!--
         }
 
         //No error but no travel
-        else if ($check = -1) {
+        else if ($check == -1) {
             header("location: ./travel-search/launch.php?filter1=".$filter1."&filter2=".$filter2."&filter3=".$filter3."&option=".$option."&dep=".$id_dep."&dest=".$id_end);
         }
 

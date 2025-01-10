@@ -166,8 +166,8 @@
                     <label for="speed">By Speed</label>
                 </div>
                 <div>
-                    <input type="radio" id="time" name="option" value="Temps" checked />
-                    <label for="time">By Time</label>
+                    <input type="radio" id="price" name="option" value="Price" checked />
+                    <label for="price">By Price</label>
                 </div>
             </div>
         </div>

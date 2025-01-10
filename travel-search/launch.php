@@ -38,14 +38,14 @@ if ($len == 1) {
     $txt="./cache_".$id_dep."-".$id_end."_".$opt."_".$array_filters[0].".txt";
 }
 if ($len == 2) {
-    $command = "java -jar " . $jarPath . " localhost travia \"Implius\" \"Pepette8;\" " . $id_dep . " " . $id_end . " " . $opt . " " . $array_filters[0] . " " . $array_filters[1];
+    $command = "java -jar " . $jarPath . " localhost travia \"Implius\" \"Pepette8;\" " . $id_dep . " " . $id_end . " " . $opt . " " . $array_filters[0] . "," . $array_filters[1];
     $filters="[$filter1,$filter2]";
-    $txt="./cache_".$id_dep."-".$id_end."_".$opt."_".$array_filters[0]."-".$array_filters[1].".txt";
+    $txt="./cache_".$id_dep."-".$id_end."_".$opt."_".$array_filters[0].",".$array_filters[1].".txt";
 }
 if ($len == 3) {
-    $command = "java -jar " . $jarPath . " localhost travia \"Implius\" \"Pepette8;\" " . $id_dep . " " . $id_end . " " . $opt . " " . $array_filters[0] . " " . $array_filters[1] . " " . $array_filters[2];
+    $command = "java -jar " . $jarPath . " localhost travia \"Implius\" \"Pepette8;\" " . $id_dep . " " . $id_end . " " . $opt . " " . $array_filters[0] . "," . $array_filters[1] . "," . $array_filters[2];
     $filters="[$filter1,$filter2]";
-    $txt="./cache_".$id_dep."-".$id_end."_".$opt."_".$array_filters[0]."-".$array_filters[1]."-".$array_filters[2].".txt";
+    $txt="./cache_".$id_dep."-".$id_end."_".$opt."_".$array_filters[0].",".$array_filters[1].",".$array_filters[2].".txt";
 }
 
 // Exécuter la commande et récupérer la sortie
@@ -103,9 +103,8 @@ if ($string == "[]") {
     $time_string = "[".$time[0].",".$time[1]."]";
     
     //Insert into the table travel
-    Travel::addTravel($time_string, $price, $distance, $id_dep, $id_end, $opt, $filters, substr($txt,2,strlen($txt)-2));
+    Travel::addTravel($time_string, $price, $distance, $id_dep, $id_end, $opt, $filters, $string);
     $id = Tool::get_last_ai_id();
-
     Tool::add_search_log("Palpatine",Planet::get_name_from_id($id_dep), Planet::get_name_from_id($id_end),true,"");
     header("location: ../travel.php?travel=$id");
 }

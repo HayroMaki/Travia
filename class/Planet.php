@@ -455,12 +455,10 @@ class Planet
         $query = "SELECT name FROM planet WHERE id = ?";
         $stmt = $cnx->prepare($query);
 
-        $stmt->bindParam(1, $i, PDO::PARAM_INT);
+        $stmt->bindParam(1, $id, PDO::PARAM_INT);
 
         $stmt->execute();
-        $f = $stmt->fetchAll();
-
-        $f = $f[0];
+        $f = $stmt->fetch();
 
         if (empty($f)) {
             return null;
@@ -482,5 +480,13 @@ class Planet
             default :
                 throw new Exception("Invalid random camp");
         }
+    }
+
+    public static function planetArrayName(array $planets): array {
+        $result = array();
+        foreach ($planets as $planet) {
+            $result[] = Planet::get_name_from_id($planet);
+        }
+        return $result;
     }
 }

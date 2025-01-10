@@ -18,11 +18,17 @@
 
     $travel = Travel::getTravelFromId($travel_id);
     $departure = $travel->getDeparture();
+    $departure_name = Planet::get_name_from_id($departure);
     $destination = $travel->getDestination();
+    $destination_name = Planet::get_name_from_id($destination);
     $distance = $travel->getDistance();
     $price = $travel->getPrice();
     $time = $travel->getTime();
     $path = $travel->getPath();
+    print_r($travel);
+    $path_name = json_encode(Planet::planetArrayName($path));
+    print_r($path);
+    print_r($path_name);
 
     $selected_ship = strval($selected_shipper);
 
@@ -47,7 +53,7 @@
 <html lang="fr">
     <head>
         <meta charset="UTF-8">
-        <title><?php echo ($departure." -> ".$destination) ?></title>
+        <title><?php echo "Travia" ?></title>
         <link rel="stylesheet" href="index.css?v=<?php echo time(); ?>">
         <link rel="stylesheet" href="cart/cart.css">
 
@@ -197,8 +203,10 @@
             // Add the points :
             const planets = <?php echo $planets ?>;
 
-            const dep_name = <?php echo json_encode($departure) ?>;
-            const dest_name = <?php echo json_encode($destination) ?>;
+            const dep_name = <?php echo json_encode($departure_name) ?>;
+            const dest_name = <?php echo json_encode($destination_name) ?>;
+            const path = <?php echo $path_name ?>;
+            const path_circle = {};
 
             let dep_planet_circle;
             let dest_planet_circle;
@@ -222,6 +230,13 @@
                     `<div class='lightbox-planet-text'>${planet.region}</div>` +
                     `<div class='lightbox-planet-text lightbox-get-up'>${planet.sector}</div>`
                 );
+
+                if (path.includes(planet.name)){
+                    path_circle[planet.name] = add;
+                    circle.setStyle({
+                        color: "#FFFFFF"
+                    });
+                }
 
                 // Store the departure and destination planets :
                 if (planet.name === dep_name) {
@@ -267,10 +282,22 @@
             dest_planet_circle.options.fillColor = "#ffffff";
 
             // Draw a direct line between the two planets :
-            const line = L.polyline([dep_planet_xy,dest_planet_xy],{
+            /* const line = L.polyline([dep_planet_xy,dest_planet_xy],{
                 weight: 4,
                 color: "#ffffff",
-            }).addTo(map);
+            }).addTo(map); */
+           path.forEach(function(id) {
+               console.log(id === dest_name);
+                if (!(id === dest_name)) {
+                    console.log(id);
+                    const start = path_circle[id];
+                    const end = path_circle[path[path.indexOf(id) + 1]];
+                    const line = L.polyline([start, end], {
+                        weight: 4,
+                        color: "#FFFFFF",
+                    }).addTo(map);
+                }
+            });
 
             // Bring to front after creating the line so that the click isn't buggy :
             dep_planet_circle.bringToFront();
