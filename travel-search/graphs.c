@@ -1,11 +1,9 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include "cJSON/cJSON.h"
+#include "cJSON.h"
 #include <string.h>
 #include <dirent.h>
-#include <sys/stat.h>
 #include <fcntl.h>
-#include <unistd.h>
 
 #define None (-1)
 #define Default 33000
@@ -64,10 +62,10 @@ void print_good_list(List l, int i, char* buf) {
     }
 }
 
-Element ithElement_list(int i, List l) {
-    if (i<0 || i>len_list(l)) exit(EXIT_FAILURE);
+Element ithElement_list(int i, List l, int len) {
+    if (i<0 || i>len) exit(EXIT_FAILURE);
     if (i==0) return l->elem;
-    else return ithElement_list(i-1, l->succ);
+    else return ithElement_list(i-1, l->succ, len);
 }
 
 int contains_list(Element e, List l) {
@@ -157,19 +155,6 @@ void printNiceHeap_aux(TwinHeap th, int index, int depth) {
 void printNiceHeap(TwinHeap th) {
     printf("heapIndex  dataIndex\n");
     printNiceHeap_aux(th, 0, 0);
-}
-
-void printNiceHeap_noCheck_aux(TwinHeap th, int index, int depth) {
-    printf("     %d         ", index);
-    printf("%*s", depth, "");
-    printf("%d [key=%d]\n", th.heap[index], key(th, index));
-    if (!(lChild(index) >= *th.len)) printNiceHeap_noCheck_aux(th, lChild(index), depth+1);
-    if (!(rChild(index) >= *th.len)) printNiceHeap_noCheck_aux(th, rChild(index), depth+1);
-}
-
-void printNiceHeap_no_check(TwinHeap th) {
-    printf("heapIndex  dataIndex\n");
-    printNiceHeap_noCheck_aux(th, 0, 0);
 }
 
 void swap(TwinHeap th, int i, int j) {
@@ -292,10 +277,10 @@ int contains_graph(Graph_List l, Element e) {
     return contains_graph(l->succ, e);
 }
 
-G_Cell ithElement_graph(Graph_List l, int i) {
-    if (i<0 || i>len_graph_list(l)) exit(EXIT_FAILURE);
+G_Cell ithElement_graph(Graph_List l, int i, int len) {
+    if (i<0 || i>len) exit(EXIT_FAILURE);
     if (i==0) return *l;
-    else return ithElement_graph(l->succ, i-1);
+    else return ithElement_graph(l->succ, i-1, len);
 }
 
 void print_graph(Graph_List l) {
@@ -716,7 +701,7 @@ List a_star(const Graph_List g, Vertex_value* vex, const Element d, const Elemen
         int m_index = popMinimum_len(openl,len);
         len--;
         double m_cost = openl.data[m_index].key;
-        G_Cell m = ithElement_graph(g,m_index);
+        G_Cell m = ithElement_graph(g,m_index, len_graph_list(g));
 
         // Add the current cell to the closed list :
         push_list(&closel,m_index);
@@ -746,7 +731,7 @@ List a_star(const Graph_List g, Vertex_value* vex, const Element d, const Elemen
             // Get cost :
             double v_cost = vex[i].cost;
             double known_cost = m_cost + v_cost;
-            G_Cell v_a = ithElement_graph(g,m_index);
+            G_Cell v_a = ithElement_graph(g,m_index, len_graph_list(g));
             double estimated_total_cost = known_cost + v_a.dist;
 
             //printf("\tVertex : %d:%lf\n",v_a_id, estimated_total_cost);

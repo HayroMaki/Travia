@@ -324,9 +324,7 @@ class Planet
         $stmt->bindParam(1, $id, PDO::PARAM_INT);
 
         $stmt->execute();
-        $f = $stmt->fetchAll();
-
-        $f = $f[0];
+        $f = $stmt->fetch();
 
         if (empty($f)) {
             return null;

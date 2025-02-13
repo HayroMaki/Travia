@@ -2,31 +2,45 @@
 
 <?php
 // Set up the PDO
+
+use PHPMailer\PHPMailer\PHPMailer;
+
 require_once("include/setupPDO.php");
 require_once("include/includeClasses.php");
 
 include("include/fontSelector.php");
 
-if (isset($_POST["first-name"]) && isset($_POST["last-name"]) && isset($_POST["email"]) && isset($_POST["password"]) && isset($_POST["verify-password"])) {
+$first_name = filter_input(INPUT_POST, "first-name");
+$last_name = filter_input(INPUT_POST, "last-name");
+$email = filter_input(INPUT_POST, "email", FILTER_SANITIZE_EMAIL);
+$password = filter_input(INPUT_POST, "password");
+$verify_password = filter_input(INPUT_POST, "verify-password");
+
+if (isset($first_name) && isset($last_name) && isset($email) && isset($password) && isset($verify_password)) {
     // Check if email is already used :
-    if (Tool::email_present($_POST["email"])) {
+    if (Tool::email_present($email)) {
         $error = "Email is already in use.";
-        Tool::add_register_log($_POST["email"], $_POST["first-name"], $_POST["last-name"], false, $error);
+        Tool::add_register_log($email, $first_name, $last_name, false, $error);
     }
 
     // Check that both password are the same :
-    if ($_POST["password"] != $_POST["verify-password"]) {
+    else if ($password != $verify_password) {
         $error = "Passwords do not match.";
-        Tool::add_register_log($_POST["email"], $_POST["first-name"], $_POST["last-name"], false, $error);
+        Tool::add_register_log($email, $first_name, $last_name, false, $error);
     }
 
-
+    // Send the verification email with a newly generated random verification code :
+    else {
+        if (Tool::send_verification_email($email)) {
+            Tool::add_verification_log($email, true, "");
+            header("Location:codeVerification.php?email=$email");
+        } else {
+            Tool::add_verification_log($email, false, "Mailer Error.");
+            $error = "Could not send verification email, try again later.";
+        }
+    }
 }
 ?>
-
-<script>
-    loadFont();
-</script>
 
 <html lang="fr">
 <head>
@@ -41,7 +55,7 @@ if (isset($_POST["first-name"]) && isset($_POST["last-name"]) && isset($_POST["e
 ?>
 <div class="login-container">
     <div class="login-error"><?php if (isset($error)) echo $error ?></div>
-    <form action="login.php" method="post" class="login-form" id="login-form">
+    <form action="#" method="POST" class="login-form" id="login-form">
 
         <div class="login-little-inputs">
             <div>

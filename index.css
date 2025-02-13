@@ -620,6 +620,7 @@ hr {
     margin: 1rem auto;
     background-color: #050505;
     text-align: center;
+    font-family: Syne, sans-serif;
     justify-content: center;
     border: 3px outset dimgray;
     color: white;
@@ -642,4 +643,60 @@ hr {
 
 .login-link:hover{
     color: dodgerblue;
+}
+
+.login-error {
+    font-family: Syne, sans-serif;
+    color: white;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.verif {
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 10px;
+    background-color: rgba(37, 37, 37, 0.3);
+    border: 10px solid rgba(110, 110, 110, 0.1);
+    border-radius: 1rem;
+    text-align: center;
+}
+
+.verif-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.verif-number {
+    width: 60px;
+    height: 70px;
+    margin-bottom: 1rem;
+    background-color: #050505;
+    font-size: 30px;
+    font-family: Inter, sans-serif;;
+    font-weight: bolder;
+    text-align: center;
+    justify-content: center;
+    border: 3px outset dimgray;
+    color: white;
+}
+
+.verif-submit{
+    width: 50%;
+    margin: 1rem auto;
+    background-color: #050505;
+    text-align: center;
+    font-family: Syne, sans-serif;
+    justify-content: center;
+    border: 3px outset dimgray;
+    color: white;
+    transition: all 0.5s;
+}
+
+.verif-submit:hover{
+    background-color: midnightblue;
+    border-color: dodgerblue;
 }

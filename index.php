@@ -44,7 +44,7 @@
         }
 
         else if ($_GET['error'] == "prog") {
-            $error_msg = "Problem with the programme.";
+            $error_msg = "Problem with the program.";
         }
     }
 

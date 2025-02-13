@@ -27,10 +27,10 @@ include("include/header.inc.php");
         <div class="box"><img class="jg" src="data/images/guillaume.png">Guillaume Augeraud<br><div class="role">Technical Leader</div></div>
     </a>
     <a href="https://www.linkedin.com/in/a-achirecesei/" target="_blank">
-        <div class="box"><img src="data/images/andrei.png">Andrei Achirecesei<br><div class="role">Developper</div></div>
+        <div class="box"><img class="jg" src="data/images/andrei.png">Andrei Achirecesei<br><div class="role">Developper</div></div>
     </a>
     <a href="https://www.linkedin.com/in/rissot/" target="_blank">
-        <div class="box"><img class="b" src="data/images/benjamin.jpg">Benjamin Rissot<br><div class="role">Developper</div></div>
+        <div class="box"><img class="jg" src="data/images/benjamin.png">Benjamin Rissot<br><div class="role">Developper</div></div>
     </a>
 </div>
 

@@ -43,11 +43,11 @@
     // Variables
     const stars = [];
     const meteors = [];
-    const numStars = 700;
+    const numStars = 300;
 
-    const meteorLineLenght = Math.random() * 15 + 1;
+    const meteorLineLenght = Math.random() * 10 + 1;
     const meteorOpacityDecrease = 0.01;
-    const meteorSpeedMultiplicator = 10;
+    const meteorSpeedMultiplicator = 2;
 
         // Classe pour les étoiles
         class Star {

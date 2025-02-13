@@ -42,8 +42,11 @@ global$cnx; <!--
         // Add a failed search log :
         Tool::add_search_log("Palpatine","", "",false,"empty_fields");
         header('location: ./index.php?error=empty_fields');
+
     } else if (!isset($_GET['filter1']) && !isset($_GET['filter2']) && !isset($_GET['filter3'])) {
+        Tool::add_search_log("Palpatine","", "",false,"empty_options");
         header("location: ./index.php?error=option");
+
     } else {
         // Check that the fields are valid (in the database),
         // if not, head back to index with the invalid_planets error :

@@ -8,12 +8,19 @@ include "../class/Travel.php";
 global $cnx;
 require_once("../include/config_local.php");
 
+// To prevent the program to stop due to memory usage or execution time :
+ini_set('memory_limit', '4096M');
+ini_set('max_execution_time', 0);
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
 //Get the data for the programme
 if (isset($_GET['dep']) && isset($_GET['dest']) && isset($_GET['option'])) {
     $id_dep = $_GET['dep'];
     $opt = $_GET['option'];
     $id_end = $_GET['dest'];
 } else {
+    Tool::add_search_log("Palpatine","", "",false,"invalid_planets");
     header("location: ../index.php?error=invalid_planets");
 }
 
@@ -21,7 +28,10 @@ if (isset($_GET['dep']) && isset($_GET['dest']) && isset($_GET['option'])) {
 $filter1 = $_GET['filter1'] ?? null;
 $filter2 = $_GET['filter2'] ?? null;
 $filter3 = $_GET['filter3'] ?? null;
-if ($filter1 == null && $filter2 == null && $filter3 == null) header("location ../index.php?error=option");
+if ($filter1 == null && $filter2 == null && $filter3 == null) {
+    Tool::add_search_log("Palpatine","", "",false,"empty_options");
+    header("location ../index.php?error=option");
+}
 $filters = array();
 if ($filter1 != null) $array_filters[] = $filter1;
 if ($filter2 != null) $array_filters[] = $filter2;
@@ -31,19 +41,19 @@ $len = count($array_filters);
 // Chemin vers le fichier .jar
 $jarPath = 'Travia.jar';
 
-//Create the command to execute the jar, the txt name, and an string representing an array for the database
+//Create the command to execute the jar, the txt name, and a string representing an array for the database
 if ($len == 1) {
-    $command = "java -jar " . $jarPath . " localhost travia \"Id_db\" \"Mdp_db\" " . $id_dep . " " . $id_end . " " . $opt . " " . $array_filters[0];
+    $command = "java -jar " . $jarPath . " localhost travia root rootPassword " . $id_dep . " " . $id_end . " " . $opt . " " . $array_filters[0];
     $filters="[$filter1]";
     $txt="./cache_".$id_dep."-".$id_end."_".$opt."_".$array_filters[0].".txt";
 }
 if ($len == 2) {
-    $command = "java -jar " . $jarPath . " localhost travia \"Id_db\" \"Mdp_db\" " . $id_dep . " " . $id_end . " " . $opt . " " . $array_filters[0] . "," . $array_filters[1];
+    $command = "java -jar " . $jarPath . " localhost travia root rootPassword " . $id_dep . " " . $id_end . " " . $opt . " " . $array_filters[0] . "," . $array_filters[1];
     $filters="[$filter1,$filter2]";
     $txt="./cache_".$id_dep."-".$id_end."_".$opt."_".$array_filters[0].",".$array_filters[1].".txt";
 }
 if ($len == 3) {
-    $command = "java -jar " . $jarPath . " localhost travia \"Id_db\" \"Mdp_bd\" " . $id_dep . " " . $id_end . " " . $opt . " " . $array_filters[0] . "," . $array_filters[1] . "," . $array_filters[2];
+    $command = "java -jar " . $jarPath . " localhost travia root rootPassword " . $id_dep . " " . $id_end . " " . $opt . " " . $array_filters[0] . "," . $array_filters[1] . "," . $array_filters[2];
     $filters="[$filter1,$filter2]";
     $txt="./cache_".$id_dep."-".$id_end."_".$opt."_".$array_filters[0].",".$array_filters[1].",".$array_filters[2].".txt";
 }
@@ -51,13 +61,12 @@ if ($len == 3) {
 // Exécuter la commande et récupérer la sortie
 $output = [];
 $returnCode = 0;
+
 exec($command, $output, $returnCode);
 
-// Afficher le résultat ou gérer les erreurs
-if ($returnCode === 0) {
-
-} else {
-    Tool::add_search_log("Palpatine",Planet::get_name_from_id($id_dep), Planet::get_name_from_id($id_end),false,"Program failed");
+// Afficher le résultat ou gére les erreurs
+if ($returnCode !== 0) {
+    Tool::add_search_log("Palpatine", Planet::get_name_from_id($id_dep), Planet::get_name_from_id($id_end), false, "Program failed");
     header("location: ../index.php?error=prog");
 }
 

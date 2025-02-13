@@ -15,7 +15,7 @@
 </script>
 
 <div class="cart" onclick="showCart()">
-    <img src="cart/cart.png" width="40">
+    <img src="data/icons/cart.png" width="40">
 
     <div class="cartDetail" onclick="showCart()">
         <?php
@@ -46,19 +46,19 @@
                             // input type number changing quantity
                             echo "<b>Quantity : ".$item->getQuantity()."</b>";
                             ?>
-                            <form action="cart/changeQuantity.php" method="get">
+                            <form action="changeQuantity.php" method="get">
                                 <input type="hidden" name="id" value="<?php echo $item->getId(); ?>">
                                 <input type="number" name="quantity" value="<?php echo $item->getQuantity(); ?>" min="1" max="<?php echo $ship->getCapacity()?>">
                                 <input type="submit" value="Change">
                             </form>
                         </div>
                         <div class="cartItemDelete">
-                            <a href="cart/deleteCartItem.php?id=<?php echo $item->getId(); ?>"><b>Delete</b></a>
+                            <a href="deleteCartItem.php?id=<?php echo $item->getId(); ?>"><b>Delete</b></a>
                         </div>
                     </div>
                     <?php
                 }
-                echo "<a href='cart/deleteCart.php'><b>Empty cart</b></a>";
+                echo "<a href='deleteCart.php'><b>Empty cart</b></a>";
             }
         } else {
             echo '<p><b>Your cart is empty</b></p>';
