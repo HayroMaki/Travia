@@ -1,9 +1,30 @@
 <!DOCTYPE html>
 
 <?php
+session_start();
 // Set up the PDO
 require_once("include/setupPDO.php");
 require_once("include/includeClasses.php");
+
+$code_1 = filter_input(INPUT_POST, "code1", FILTER_SANITIZE_NUMBER_INT);
+$code_2 = filter_input(INPUT_POST, "code2", FILTER_SANITIZE_NUMBER_INT);
+$code_3 = filter_input(INPUT_POST, "code3", FILTER_SANITIZE_NUMBER_INT);
+$code_4 = filter_input(INPUT_POST, "code4", FILTER_SANITIZE_NUMBER_INT);
+$code_5 = filter_input(INPUT_POST, "code5", FILTER_SANITIZE_NUMBER_INT);
+$code_6 = filter_input(INPUT_POST, "code6", FILTER_SANITIZE_NUMBER_INT);
+
+if (!isset($_SESSION["email"])) {
+    //header("Location:register.php");
+} else {
+    $email = $_SESSION["email"];
+}
+
+if (isset($code_1) && isset($code_2) && isset($code_3) && isset($code_4) && isset($code_5) && isset($code_6)) {
+    $code = $code_1 . $code_2 . $code_3 . $code_4 . $code_5 . $code_6;
+    if (Tool::check_expiration($email)) {
+        $expired = true;
+    }
+}
 ?>
 
 <html lang="fr">
@@ -12,13 +33,13 @@ require_once("include/includeClasses.php");
     <title>Travia</title>
     <link href="index.css?v=<?php echo time(); ?>" rel="stylesheet">
     <link rel="stylesheet" href="cart/cart.css">
+    <!-- This prevents the input type=number to show the arrows -->
     <style>
         input::-webkit-outer-spin-button,
         input::-webkit-inner-spin-button {
             -webkit-appearance: none;
             margin: 0;
         }
-
         /* Firefox */
         input[type=number] {
             -moz-appearance: textfield;
@@ -29,15 +50,21 @@ require_once("include/includeClasses.php");
 <?php
 include("include/header.inc.php");
 ?>
-<form onsubmit="onSubmit()" class="verif">
+<form action="#" method="POST" class="verif">
     <h3>Enter the verification code you received by email :</h3>
+    <div class="login-error">
+        <?php
+        if (isset($expired)) {
+            echo "Your code expired, please start over the registration process.";
+        } ?>
+    </div>
     <div class="verif-container">
-        <input type="number" name="code" class="verif-number" required/>
-        <input type="number" name="code" class="verif-number" required/>
-        <input type="number" name="code" class="verif-number" required/>
-        <input type="number" name="code" class="verif-number" required/>
-        <input type="number" name="code" class="verif-number" required/>
-        <input type="number" name="code" class="verif-number" required/>
+        <input type="number" name="code1" class="verif-number" required/>
+        <input type="number" name="code2" class="verif-number" required/>
+        <input type="number" name="code3" class="verif-number" required/>
+        <input type="number" name="code4" class="verif-number" required/>
+        <input type="number" name="code5" class="verif-number" required/>
+        <input type="number" name="code6" class="verif-number" required/>
     </div>
     <input type="submit" class="verif-submit" value="Validate" id="verif-submit">
 </form>
@@ -68,13 +95,6 @@ include("include/header.inc.php");
             }
         })
     })
-
-    // mini example on how to pull the data on submit of the form
-    function onSubmit(e) {
-        e.preventDefault()
-        const code = inputElements.map(({value})=>value).join('')
-        console.log(code)
-    }
 </script>
 <?php
 include("include/footer.inc.php");

@@ -151,7 +151,7 @@ class Tool
         if ($success) {
             $success_msg = "Email successfully sent.";
         } else {
-            $success_msg = "Email couldn't be sent : Reason : ".$reason.".";
+            $success_msg = "Email could not be sent : Reason : ".$reason.".";
         }
 
         $msg = "Verification procedure, sent verification code to ".$email." > ".$success_msg;
@@ -216,25 +216,65 @@ class Tool
         } else return false;
     }
 
+    public static function check_expiration(string $email): bool {
+        global $cnx;
+        $stmt = $cnx->prepare("SELECT date FROM verify WHERE email = :email");
+        $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+        $stmt->execute();
+        $result = $stmt->fetch();
 
-    public static function send_verification_email(string $email): bool {
+        $code_date = date_create($result['date']);
+        $current_date = date_create(date("Y-m-d H:i:s"));
+        date_add($code_date, date_interval_create_from_date_string("10 minutes"));
+
+        if ($code_date < $current_date) {
+            $rm_code = $cnx->query("DELETE FROM verify WHERE email = :email");
+            $rm_code->execute(["email" => $email]);
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    /**
+     *
+     *
+     * @param string $email the user's email.
+     * @param string $enc_password the user's ENCRYPTED password.
+     * @param string $first_name the user's first name.
+     * @param string $last_name the user's last name.
+     * @param int|null $home_planet_id the user's home planet (can be null).
+     * @param int|null $work_planet_id the user's work planet (can be null).
+     * @return bool true if the procedure went well, false if not.
+     * @throws \Random\RandomException
+     */
+    public static function send_verification_email(string $email, string $enc_password,
+                                                   string $first_name, string $last_name,
+                                                   ?int $home_planet_id, ?int $work_planet_id): bool {
         require_once('include/sendMail.php');
 
-        $code = self::create_verification_code_in_db($email);
+        $code = self::create_verification_code_in_db($email, $enc_password, $first_name, $last_name, $home_planet_id, $work_planet_id);
         $mail = new PHPMailer(true);
         return sendMail($mail, $email, $code);
     }
 
     /**
-     * Create a new verification code in the database linked to an email and return it.
-     * In the case this email is already in the database, delete the row and create a new one.
-     * Doesn't work if the $cnx isn't setup.
+     *  Create a new verification code in the database linked to an email and return it.
+     *  In the case this email is already in the database, delete the row and create a new one.
+     *  Doesn't work if the $cnx isn't setup.
      *
      * @param string $email the user's email.
+     * @param string $enc_password the user's ENCRYPTED password.
+     * @param string $first_name the user's first name.
+     * @param string $last_name the user's last name.
+     * @param int|null $home_planet_id the user's home planet (can be null).
+     * @param int|null $work_planet_id the user's work planet (can be null).
      * @return string the verfication code (6 random digits).
      * @throws \Random\RandomException
      */
-    private static function create_verification_code_in_db(string $email): string {
+    private static function create_verification_code_in_db(string $email, string $enc_password,
+                                                           string $first_name, string $last_name,
+                                                           ?int $home_planet_id, ?int $work_planet_id): string {
         global $cnx;
         if (self::email_present_verify($email)) {
             $rm_query = $cnx->prepare("DELETE FROM verify WHERE email = :email");
@@ -245,10 +285,17 @@ class Tool
         $datetime = date("Y-m-d H:i:s");
 
         // Add the newly created code :
-        $add_query = $cnx->prepare("INSERT INTO verify (email, code, date) VALUES (:email, :code, :date)");
+        $add_query = $cnx->prepare("
+            INSERT INTO verify (email, code, date, `first-name`, `last-name`, password, `home-planet`, `work-planet`) 
+            VALUES (:email, :code, :date, :first_name, :last_name, :password, :home_planet, :work_planet)");
         $add_query->bindParam(":email", $email, PDO::PARAM_STR);
         $add_query->bindParam(":code", $code, PDO::PARAM_STR);
         $add_query->bindParam(":date", $datetime, PDO::PARAM_STR);
+        $add_query->bindParam(":first_name", $first_name, PDO::PARAM_STR);
+        $add_query->bindParam(":last_name", $last_name, PDO::PARAM_STR);
+        $add_query->bindParam(":password", $enc_password, PDO::PARAM_STR);
+        $add_query->bindParam(":home_planet", $home_planet_id, PDO::PARAM_INT);
+        $add_query->bindParam(":work_planet", $work_planet_id, PDO::PARAM_INT);
         $add_query->execute();
 
         return $code;
@@ -289,5 +336,22 @@ class Tool
 
         $result = $stmt->fetch();
         return $result != null;
+    }
+
+    /**
+     *
+     *
+     * @param $file
+     * @return void
+     */
+    public static function load_env_file($file) {
+        if (file_exists($file)) {
+            $lines = file($file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+            foreach ($lines as $line) {
+                if (strpos($line, '#') === 0 || empty($line)) continue;
+                list($key, $value) = explode('=', $line, 2);
+                putenv("$key=$value");
+            }
+        }
     }
 }

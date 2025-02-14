@@ -13,18 +13,23 @@ use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 
 function sendMail($mail,$to,$content) {
+    Tool::load_env_file('data' . '/.env');
+    $host = getenv('SMTP_HOST');
+    $user = getenv("SMTP_USER");
+    $pass = str_replace('\'','',getenv("SMTP_PASS"));
+    $port = getenv("SMTP_PORT");
     try {
         //Server settings
         $mail->SMTPDebug = 0;//Enable verbose debug output
         $mail->isSMTP();//Send using SMTP
-        $mail->Host = 'smtp.gmail.com';//Set the SMTP server to send through
+        $mail->Host = $host;//Set the SMTP server to send through
         $mail->SMTPAuth = true;//Enable SMTP authentication
-        $mail->Username = 'julesg20012005@gmail.com';//SMTP username
-        $mail->Password = 'tjvs okso kfmw otzn';//SMTP password
+        $mail->Username = $user;//SMTP username
+        $mail->Password = $pass;//SMTP password
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;//Enable implicit TLS encryption
-        $mail->Port = 465;//TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
+        $mail->Port = $port;//TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
         //Recipients
-        $mail->setFrom('julesg20012005@gmail.com', 'Travia Mailer');
+        $mail->setFrom($user, 'Travia Mailer');
         $mail->addAddress($to, 'Travia User');//Add a recipient
         //Content
         $mail->isHTML(true);//Set email format to HTML

@@ -1,14 +1,13 @@
 <!DOCTYPE html>
 
 <?php
+session_start();
 // Set up the PDO
 
 use PHPMailer\PHPMailer\PHPMailer;
 
 require_once("include/setupPDO.php");
 require_once("include/includeClasses.php");
-
-include("include/fontSelector.php");
 
 $first_name = filter_input(INPUT_POST, "first-name");
 $last_name = filter_input(INPUT_POST, "last-name");
@@ -31,9 +30,11 @@ if (isset($first_name) && isset($last_name) && isset($email) && isset($password)
 
     // Send the verification email with a newly generated random verification code :
     else {
-        if (Tool::send_verification_email($email)) {
+        if (Tool::send_verification_email($email, password_hash($password,PASSWORD_BCRYPT),
+            $first_name, $last_name, null, null)) {
             Tool::add_verification_log($email, true, "");
-            header("Location:codeVerification.php?email=$email");
+            $_SESSION["email"] = $email;
+            header("Location:codeVerification.php");
         } else {
             Tool::add_verification_log($email, false, "Mailer Error.");
             $error = "Could not send verification email, try again later.";

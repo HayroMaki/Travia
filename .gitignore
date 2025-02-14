@@ -1,2 +1,3 @@
 include/config_local.php
 include/config.php
+data/.env
