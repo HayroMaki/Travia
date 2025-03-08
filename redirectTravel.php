@@ -4,6 +4,12 @@ global$cnx; <!--
     And returns an error back to the search page or the travel.
 -->
 <?php
+session_start();
+    // Check that the user is connected :
+    if (!isset($_SESSION["email"])) {
+        header("Location:login.php");
+    }
+
     global $cnx;
     require_once("include/setupPDO.php");
     require_once "./include/includeClasses.php";

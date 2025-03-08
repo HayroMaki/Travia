@@ -1,4 +1,10 @@
 <?php
+session_start();
+// Check that the user is connected :
+if (!isset($_SESSION["email"])) {
+    header("Location:login.php");
+}
+
 // Chemin vers le fichier .jar
 $jarPath = 'travel-search/Travia.jar';
 

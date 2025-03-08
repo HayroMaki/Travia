@@ -12,7 +12,7 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 
-function sendMail($mail,$to,$content): bool {
+function sendCodeMail($mail,$to,$content): bool {
     Tool::load_env_file('data' . '/.env');
     $host = getenv('SMTP_HOST');
     $user = getenv("SMTP_USER");
@@ -79,14 +79,14 @@ function sendMail($mail,$to,$content): bool {
                     <h1>Here is your validation code :</h1>
                     <div class="code">' . $content . '</div>
                     <p>This code will be valid for the next 10 minutes.</p>
-                    <div class="footer">Thank you for joining us, may the force be with you.</div>
+                    <div class="footer">We wish you great experience on our website.</div>
                 </div>
             </body>
         ';
         $mail->AltBody = '
             Here is your validation code : ' . $content . '.
-            This code will be valid for the next 10 minutes. 
-            Thank you for joining us, may the force be with you.';
+            This code will be valid for the next 10 minutes.
+            We wish you great experience on our website.';
         $mail->send();
         return true;
     } catch (\Exception $e) {

@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 
 <?php
+session_start();
+    // Check that the user is connected :
+    if (!isset($_SESSION["email"])) {
+        header("Location:login.php");
+    }
+
     require_once("include/setupPDO.php");
     require_once "include/includeClasses.php";
 ?>

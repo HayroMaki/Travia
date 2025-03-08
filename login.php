@@ -1,18 +1,38 @@
 <!DOCTYPE html>
 
 <?php
+    session_start();
+    if (isset($_SESSION["email"])) {
+        unset($_SESSION["email"]);
+    }
+
+    if (isset($_SESSION["connected"])) {
+        unset($_SESSION["connected"]);
+    }
+
     // Set up the PDO
     require_once("include/setupPDO.php");
     require_once("include/includeClasses.php");
     include("include/fontSelector.php");
 
     if (isset($_POST["email"]) && isset($_POST["password"])) {
-        if (Tool::verify_email_password($_POST["email"], $_POST["password"])) {
-            Tool::add_login_log($_POST["email"], true, "");
-            session_start();
+        $email = $_POST["email"];
+
+        // Check the email/password couple from DB :
+        if (Tool::verify_email_password($email, $_POST["password"])) {
+
+            // Send a verification code :
+            if (Tool::send_verification_email_login($email)) {
+                Tool::add_verification_log($email, true, "");
+                $_SESSION["email"] = $email;
+                header('Location:codeVerification.php');
+            } else {
+                Tool::add_verification_log($email, false, "Mailer Error.");
+                $error = "Could not send verification email, try again later.";
+            }
         } else {
             $error = "Email or password is incorrect.";
-            Tool::add_login_log($_POST["email"], false, $error);
+            Tool::add_login_log($email, false, $error);
         }
     }
 ?>

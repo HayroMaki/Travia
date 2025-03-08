@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 
 <?php
+    session_start();
+    // Check that the user is connected :
+    if (!isset($_SESSION["email"]) || !$_SESSION["connected"]) {
+        header("Location:login.php");
+    }
+
     // Check or add the cart cookie :
     if (!isset($_COOKIE['cart'])) {
         setcookie('cart', serialize([]), time() + 7200, '/');
@@ -80,8 +86,8 @@
             include("include/header.inc.php");
             include("include/searchForm.php");
         ?>
+        <p id="info"></p>
         <div id="genDiv">
-            <p id="info"></p>
             <div id="map" style="border-color: #111111"></div>
         </div>
         <?php

@@ -226,16 +226,19 @@ class Tool
      * @param int|null $home_planet_id the user's home planet (can be null).
      * @param int|null $work_planet_id the user's work planet (can be null).
      * @return bool true if the procedure went well, false if not.
-     * @throws \Random\RandomException
      */
-    public static function send_verification_email(string $email, string $enc_password,
+    public static function send_verification_email_registration(string $email, string $enc_password,
                                                    string $first_name, string $last_name,
                                                    ?int $home_planet_id, ?int $work_planet_id): bool {
-        require_once('include/sendMail.php');
-
-        $code = self::create_verification_code_in_db($email, $enc_password, $first_name, $last_name, $home_planet_id, $work_planet_id);
-        $mail = new PHPMailer(true);
-        return sendMail($mail, $email, $code);
+        try {
+            require_once('include/sendLinkMail.php');
+            $code = self::create_verification_code_in_db_register($email, $enc_password, $first_name, $last_name, $home_planet_id, $work_planet_id, 10);// CHANGE LINK :
+            $link = "http://localhost/Travia/LinkVerification?verify=" . $code;
+            $mail = new PHPMailer(true);
+            return sendLinkMail($mail, $email, $link);
+        } catch (Exception $e) {
+            return false;
+        }
     }
 
     /**
@@ -249,24 +252,23 @@ class Tool
      * @param string $last_name the user's last name.
      * @param int|null $home_planet_id the user's home planet (can be null).
      * @param int|null $work_planet_id the user's work planet (can be null).
-     * @return string the verfication code (6 random digits).
-     * @throws \Random\RandomException
+     * @return string the verification code (6 random digits).
      */
-    private static function create_verification_code_in_db(string $email, string $enc_password,
-                                                           string $first_name, string $last_name,
-                                                           ?int $home_planet_id, ?int $work_planet_id): string {
+    private static function create_verification_code_in_db_register(string $email, string $enc_password,
+                                                                    string $first_name, string $last_name,
+                                                                    ?int   $home_planet_id, ?int $work_planet_id, int $length = 6): string {
         global $cnx;
-        if (self::email_present_verify($email)) {
-            $rm_query = $cnx->prepare("DELETE FROM verify WHERE email = :email");
+        if (self::email_present($email)) {
+            $rm_query = $cnx->prepare("DELETE FROM register_verify WHERE email = :email");
             $rm_query->bindParam(":email", $email, PDO::PARAM_STR);
             $rm_query->execute();
         }
-        $code = self::random_string();
+        $code = self::random_string($length);
         $datetime = date("Y-m-d H:i:s");
 
         // Add the newly created code :
         $add_query = $cnx->prepare("
-            INSERT INTO verify (email, code, date, `first-name`, `last-name`, password, `home-planet`, `work-planet`) 
+            INSERT INTO register_verify (email, code, date, `first-name`, `last-name`, password, `home-planet`, `work-planet`) 
             VALUES (:email, :code, :date, :first_name, :last_name, :password, :home_planet, :work_planet)");
         $add_query->bindParam(":email", $email, PDO::PARAM_STR);
         $add_query->bindParam(":code", $code, PDO::PARAM_STR);
@@ -287,7 +289,6 @@ class Tool
      * @param int $length How many characters do we want (6 by default).
      * @param string $chars A string of all possible characters to select from ([0-9] by default).
      * @return string the generated string of characters.
-     * @throws \Random\RandomException
      */
     private static function random_string(int $length = 6, string $chars = '0123456789'): string {
         if ($length < 1) {
@@ -308,9 +309,9 @@ class Tool
      * @param string $email the user's email.
      * @return bool true if present, false if not.
      */
-    private static function email_present_verify(string $email): bool {
+    private static function email_present_registration(string $email): bool {
         global $cnx;
-        $stmt = $cnx->prepare("SELECT id FROM verify WHERE email = :email");
+        $stmt = $cnx->prepare("SELECT id FROM register_verify WHERE email = :email");
         $stmt->bindParam(":email", $email, PDO::PARAM_STR);
         $stmt->execute();
 
@@ -324,9 +325,9 @@ class Tool
      * @param string $email the user's email.
      * @return bool true if the verification code is still valid, false if not.
      */
-    public static function check_expiration(string $email): bool {
+    public static function check_expiration_registration(string $email): bool {
         global $cnx;
-        $stmt = $cnx->prepare("SELECT date FROM verify WHERE email = :email");
+        $stmt = $cnx->prepare("SELECT date FROM register_verify WHERE email = :email");
         $stmt->bindParam(':email', $email, PDO::PARAM_STR);
         $stmt->execute();
         $result = $stmt->fetch();
@@ -337,7 +338,7 @@ class Tool
             $code_date->add(new DateInterval('P10M'));
 
             if ($code_date < $current_date) {
-                $rm_code = $cnx->prepare("DELETE FROM verify WHERE email = :email");
+                $rm_code = $cnx->prepare("DELETE FROM register_verify WHERE email = :email");
                 $rm_code->bindParam(":email", $email, PDO::PARAM_STR);
                 $rm_code->execute();
                 return false;
@@ -354,9 +355,9 @@ class Tool
      * @param string $code
      * @return bool
      */
-    public static function check_code(string $email, string $code): bool {
+    public static function check_code_registration(string $email, string $code): bool {
         global $cnx;
-        $stmt = $cnx->prepare("SELECT code FROM verify WHERE email = :email");
+        $stmt = $cnx->prepare("SELECT code FROM register_verify WHERE email = :email");
         $stmt->bindParam(":email", $email, PDO::PARAM_STR);
         $stmt->execute();
         $result = $stmt->fetch();
@@ -369,11 +370,130 @@ class Tool
      *
      *
      * @param string $email the user's email.
+     * @return bool true if the procedure went well, false if not.
+     */
+    public static function send_verification_email_login(string $email): bool {
+
+        try {
+            require_once('include/sendCodeMail.php');
+            $code = self::create_verification_code_in_db_login($email);
+            $mail = new PHPMailer(true);
+            return sendCodeMail($mail, $email, $code);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    /**
+     *  Create a new verification code in the database linked to an email and return it.
+     *  In the case this email is already in the database, delete the row and create a new one.
+     *  Doesn't work if the $cnx isn't setup.
+     *
+     * @param string $email the user's email.
+     * @return string the verification code (6 random digits).
+     */
+    private static function create_verification_code_in_db_login(string $email, int $length = 6): string {
+        global $cnx;
+        if (self::email_present($email)) {
+            $rm_query = $cnx->prepare("DELETE FROM login_verify WHERE email = :email");
+            $rm_query->bindParam(":email", $email, PDO::PARAM_STR);
+            $rm_query->execute();
+        }
+        $code = self::random_string($length);
+        $datetime = date("Y-m-d H:i:s");
+
+        // Add the newly created code :
+        $add_query = $cnx->prepare("
+            INSERT INTO login_verify (email, code, date) VALUES (:email, :code, :date)");
+        $add_query->bindParam(":email", $email, PDO::PARAM_STR);
+        $add_query->bindParam(":code", $code, PDO::PARAM_STR);
+        $add_query->bindParam(":date", $datetime, PDO::PARAM_STR);
+        $add_query->execute();
+
+        return $code;
+    }
+
+    /**
+     * Verify the existence of an email in the verify table of the database.
+     * Doesn't work if the $cnx isn't setup.
+     *
+     * @param string $email the user's email.
+     * @return bool true if present, false if not.
+     */
+    private static function email_present_login(string $email): bool {
+        global $cnx;
+        $stmt = $cnx->prepare("SELECT id FROM login_verify WHERE email = :email");
+        $stmt->bindParam(":email", $email, PDO::PARAM_STR);
+        $stmt->execute();
+
+        $result = $stmt->fetch();
+        return $result != null;
+    }
+
+    /**
+     *
+     *
+     * @param string $email the user's email.
+     * @return bool true if the verification code is still valid, false if not.
+     */
+    public static function check_expiration_login(string $email): bool {
+        global $cnx;
+        $stmt = $cnx->prepare("SELECT date FROM login_verify WHERE email = :email");
+        $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+        $stmt->execute();
+        $result = $stmt->fetch();
+
+        if ($result != null) {
+            $code_date = new DateTime($result['date']);
+            $current_date = new DateTime();
+            $code_date->add(new DateInterval('P10M'));
+
+            if ($code_date < $current_date) {
+                $rm_code = $cnx->prepare("DELETE FROM login_verify WHERE email = :email");
+                $rm_code->bindParam(":email", $email, PDO::PARAM_STR);
+                $rm_code->execute();
+                return false;
+            } else {
+                return true;
+            }
+        } return false;
+    }
+
+    /**
+     *
+     *
+     * @param string $email the user's email.
+     * @param string $code
+     * @return bool
+     */
+    public static function check_code_login(string $email, string $code): bool {
+        global $cnx;
+        $stmt = $cnx->prepare("SELECT code FROM login_verify WHERE email = :email");
+        $stmt->bindParam(":email", $email, PDO::PARAM_STR);
+        $stmt->execute();
+        $result = $stmt->fetch();
+
+        $code_db = strval($result["code"]);
+        return strcmp($code, $code_db);
+    }
+
+    public static function delete_login_verify(string $email): bool {
+        global $cnx;
+        $stmt = $cnx->prepare("DELETE FROM login_verify WHERE email = :email");
+        $stmt->bindParam(":email", $email, PDO::PARAM_STR);
+        $stmt->execute();
+        return $stmt->rowCount() > 0;
+    }
+
+    /**
+     *
+     *
+     * @param string $email the user's email.
      * @return bool
      */
     public static function register(string $email): bool {
         global $cnx;
-        $stmt = $cnx->prepare("SELECT * FROM verify WHERE email = :email");
+        $stmt = $cnx->prepare("SELECT * FROM register_verify WHERE email = :email");
         $stmt->bindParam(":email", $email, PDO::PARAM_STR);
         $stmt->execute();
         $result = $stmt->fetch();
@@ -396,9 +516,9 @@ class Tool
             $reg_stmt->bindParam(":work_planet_id", $work_planet_id, PDO::PARAM_INT);
             $reg_stmt->execute();
             if ($reg_stmt->rowCount() > 0) {
-                $verif_stmt = $cnx->prepare("DELETE FROM verify WHERE email = :email");
-                $verif_stmt->bindParam(":email", $email, PDO::PARAM_STR);
-                $verif_stmt->execute();
+                $verify_stmt = $cnx->prepare("DELETE FROM register_verify WHERE email = :email");
+                $verify_stmt->bindParam(":email", $email, PDO::PARAM_STR);
+                $verify_stmt->execute();
                 return true;
             } else return false;
         } else return false;
@@ -419,5 +539,45 @@ class Tool
                 putenv("$key=$value");
             }
         }
+    }
+
+    function create_captcha($text): string {
+        $width = 200;
+        $height = 100;
+        $font_file = "data/fonts/OpenSans-Regular.ttf";
+
+        $image = imagecreatetruecolor($width, $height);
+
+        $white = imagecolorallocate($image, 255, 255, 255);
+        $black = imagecolorallocate($image, 0, 0, 0);
+
+        imagefill($image, 0, 0, $white);
+        imagettftext($image, 25, rand(-20,20), $width/4, 60, $black, $font_file, $text);
+
+        $warped_image = imagecreatetruecolor($width, $height);
+        imagefill($warped_image, 0, 0, imagecolorallocate($warped_image, 255, 255, 255));
+
+        for ($x=0; $x < $width; $x++) {
+            # code...
+            for ($y=0; $y < $height; $y++) {
+                # code...
+                $index = imagecolorat($image, $x, $y);
+                $color_comp = imagecolorsforindex($image, $index);
+
+                $color = imagecolorallocate($warped_image, $color_comp['red'], $color_comp['green'], $color_comp['blue']);
+
+                $imageX = $x;
+                $imageY = $y + sin($x / 10) * 10;
+
+                imagesetpixel($warped_image, $imageX, $imageY, $color);
+            }
+        }
+
+        $path = "captcha.jpg";
+        imagejpeg($warped_image,$path);
+        imagedestroy($warped_image);
+        imagedestroy($image);
+
+        return $path;
     }
 }

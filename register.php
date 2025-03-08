@@ -2,6 +2,15 @@
 
 <?php
 session_start();
+
+if (isset($_SESSION["email"])) {
+    unset($_SESSION["email"]);
+}
+
+if (isset($_SESSION["connected"])) {
+    unset($_SESSION["connected"]);
+}
+
 // Set up the PDO
 
 use PHPMailer\PHPMailer\PHPMailer;
@@ -17,13 +26,13 @@ $verify_password = filter_input(INPUT_POST, "verify-password");
 
 if (isset($first_name) && isset($last_name) && isset($email) && isset($password) && isset($verify_password)) {
     // Check if email is already used :
-    // This poses a problem, a user should never know if the email he entered is used or not.
+    // This poses a problem, a user should never know if the email he entered is used or not, so we don't tell him.
     if (Tool::email_present($email)) {
         $msg = "Email is already in use.";
         Tool::add_register_log($email, $first_name, $last_name, false, $msg);
     }
 
-    // Check that both password are the same :
+    // Check that both passwords are the same :
     else if ($password != $verify_password) {
         $error = "Passwords do not match.";
         Tool::add_register_log($email, $first_name, $last_name, false, $error);
@@ -31,11 +40,11 @@ if (isset($first_name) && isset($last_name) && isset($email) && isset($password)
 
     // Send the verification email with a newly generated random verification code :
     else {
-        if (Tool::send_verification_email($email, password_hash($password,PASSWORD_BCRYPT),
+        if (Tool::send_verification_email_registration($email, password_hash($password,PASSWORD_BCRYPT),
             $first_name, $last_name, null, null)) {
             Tool::add_verification_log($email, true, "");
             $_SESSION["email"] = $email;
-            header("Location:codeVerification.php");
+            $error = "If your email address is not already used, a verification link has been sent to your email address.";
         } else {
             Tool::add_verification_log($email, false, "Mailer Error.");
             $error = "Could not send verification email, try again later.";
@@ -86,6 +95,27 @@ if (isset($first_name) && isset($last_name) && isset($email) && isset($password)
         </div>
     </form>
 </div>
+
+<script>
+    document.getElementById("login-form").addEventListener("submit", function (event) {
+        const password = document.getElementById("login-password").value;
+        const confirmPassword = document.getElementById("login-verify-password").value;
+        const errorContainer = document.querySelector(".login-error");
+
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{12,32}$/;
+
+        if (!passwordRegex.test(password)) {
+            errorContainer.textContent = "Password must be between 12 and 32 characters long, with at least one lowercase letter, one capital letter, one number and one special character (* _ ? ...)";
+            event.preventDefault();
+            return;
+        }
+
+        if (password !== confirmPassword) {
+            errorContainer.textContent = "Les mots de passe ne correspondent pas.";
+            event.preventDefault();
+        }
+    });
+</script>
 <?php
     include("include/footer.inc.php");
     require_once("include/background.php");

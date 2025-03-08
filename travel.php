@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 
 <?php
+    session_start();
+    // Check that the user is connected :
+    if (!isset($_SESSION["email"])) {
+        header("Location:login.php");
+    }
+
     // Check or add the cart cookie :
     if (!isset($_COOKIE['cart'])) {
         setcookie('cart', serialize([]), time() + 7200, '/');
