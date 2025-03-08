@@ -216,26 +216,6 @@ class Tool
         } else return false;
     }
 
-    public static function check_expiration(string $email): bool {
-        global $cnx;
-        $stmt = $cnx->prepare("SELECT date FROM verify WHERE email = :email");
-        $stmt->bindParam(':email', $email, PDO::PARAM_STR);
-        $stmt->execute();
-        $result = $stmt->fetch();
-
-        $code_date = date_create($result['date']);
-        $current_date = date_create(date("Y-m-d H:i:s"));
-        date_add($code_date, date_interval_create_from_date_string("10 minutes"));
-
-        if ($code_date < $current_date) {
-            $rm_code = $cnx->query("DELETE FROM verify WHERE email = :email");
-            $rm_code->execute(["email" => $email]);
-            return false;
-        } else {
-            return true;
-        }
-    }
-
     /**
      *
      *
@@ -341,10 +321,96 @@ class Tool
     /**
      *
      *
-     * @param $file
+     * @param string $email the user's email.
+     * @return bool true if the verification code is still valid, false if not.
+     */
+    public static function check_expiration(string $email): bool {
+        global $cnx;
+        $stmt = $cnx->prepare("SELECT date FROM verify WHERE email = :email");
+        $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+        $stmt->execute();
+        $result = $stmt->fetch();
+
+        if ($result != null) {
+            $code_date = new DateTime($result['date']);
+            $current_date = new DateTime();
+            $code_date->add(new DateInterval('P10M'));
+
+            if ($code_date < $current_date) {
+                $rm_code = $cnx->prepare("DELETE FROM verify WHERE email = :email");
+                $rm_code->bindParam(":email", $email, PDO::PARAM_STR);
+                $rm_code->execute();
+                return false;
+            } else {
+                return true;
+            }
+        } return false;
+    }
+
+    /**
+     *
+     *
+     * @param string $email the user's email.
+     * @param string $code
+     * @return bool
+     */
+    public static function check_code(string $email, string $code): bool {
+        global $cnx;
+        $stmt = $cnx->prepare("SELECT code FROM verify WHERE email = :email");
+        $stmt->bindParam(":email", $email, PDO::PARAM_STR);
+        $stmt->execute();
+        $result = $stmt->fetch();
+
+        $code_db = strval($result["code"]);
+        return strcmp($code, $code_db);
+    }
+
+    /**
+     *
+     *
+     * @param string $email the user's email.
+     * @return bool
+     */
+    public static function register(string $email): bool {
+        global $cnx;
+        $stmt = $cnx->prepare("SELECT * FROM verify WHERE email = :email");
+        $stmt->bindParam(":email", $email, PDO::PARAM_STR);
+        $stmt->execute();
+        $result = $stmt->fetch();
+        if ($result != null) {
+            $email = $result["email"];
+            $password = $result["password"];
+            $first_name = $result["first-name"];
+            $last_name = $result["last-name"];
+            $home_planet_id = $result["home-planet"];
+            $work_planet_id = $result["work-planet"];
+
+            $reg_stmt = $cnx->prepare("
+                INSERT INTO account (email, `first-name`, `last-name`, password, `home-planet`, `work-planet`) 
+                VALUES (:email, :first_name, :last_name, :password, :home_planet_id, :work_planet_id)");
+            $reg_stmt->bindParam(":email", $email, PDO::PARAM_STR);
+            $reg_stmt->bindParam(":first_name", $first_name, PDO::PARAM_STR);
+            $reg_stmt->bindParam(":last_name", $last_name, PDO::PARAM_STR);
+            $reg_stmt->bindParam(":password", $password, PDO::PARAM_STR);
+            $reg_stmt->bindParam(":home_planet_id", $home_planet_id, PDO::PARAM_INT);
+            $reg_stmt->bindParam(":work_planet_id", $work_planet_id, PDO::PARAM_INT);
+            $reg_stmt->execute();
+            if ($reg_stmt->rowCount() > 0) {
+                $verif_stmt = $cnx->prepare("DELETE FROM verify WHERE email = :email");
+                $verif_stmt->bindParam(":email", $email, PDO::PARAM_STR);
+                $verif_stmt->execute();
+                return true;
+            } else return false;
+        } else return false;
+    }
+
+    /**
+     * Load a .env file as environment variables.
+     *
+     * @param string $file the file path.
      * @return void
      */
-    public static function load_env_file($file) {
+    public static function load_env_file(string $file) {
         if (file_exists($file)) {
             $lines = file($file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
             foreach ($lines as $line) {

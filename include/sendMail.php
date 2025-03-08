@@ -12,7 +12,7 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 
-function sendMail($mail,$to,$content) {
+function sendMail($mail,$to,$content): bool {
     Tool::load_env_file('data' . '/.env');
     $host = getenv('SMTP_HOST');
     $user = getenv("SMTP_USER");

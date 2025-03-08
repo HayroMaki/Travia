@@ -17,9 +17,10 @@ $verify_password = filter_input(INPUT_POST, "verify-password");
 
 if (isset($first_name) && isset($last_name) && isset($email) && isset($password) && isset($verify_password)) {
     // Check if email is already used :
+    // This poses a problem, a user should never know if the email he entered is used or not.
     if (Tool::email_present($email)) {
-        $error = "Email is already in use.";
-        Tool::add_register_log($email, $first_name, $last_name, false, $error);
+        $msg = "Email is already in use.";
+        Tool::add_register_log($email, $first_name, $last_name, false, $msg);
     }
 
     // Check that both password are the same :

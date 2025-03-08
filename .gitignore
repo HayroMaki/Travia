@@ -1,3 +1,4 @@
 include/config_local.php
 include/config.php
 data/.env
+travel-search/cache_*
