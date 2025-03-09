@@ -6,7 +6,7 @@
         <p id="mainTitle">Travia</p>
     </a>
 
-    <a href="">
+    <a href="./account.php">
         <img src="data/icons/user_Palpatine.png" id="user-image" alt="user icon">
     </a>
 </header>

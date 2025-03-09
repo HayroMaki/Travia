@@ -303,23 +303,6 @@ class Tool
     }
 
     /**
-     * Verify the existence of an email in the verify table of the database.
-     * Doesn't work if the $cnx isn't setup.
-     *
-     * @param string $email the user's email.
-     * @return bool true if present, false if not.
-     */
-    private static function email_present_registration(string $email): bool {
-        global $cnx;
-        $stmt = $cnx->prepare("SELECT id FROM register_verify WHERE email = :email");
-        $stmt->bindParam(":email", $email, PDO::PARAM_STR);
-        $stmt->execute();
-
-        $result = $stmt->fetch();
-        return $result != null;
-    }
-
-    /**
      *
      *
      * @param string $email the user's email.
@@ -414,23 +397,6 @@ class Tool
     }
 
     /**
-     * Verify the existence of an email in the verify table of the database.
-     * Doesn't work if the $cnx isn't setup.
-     *
-     * @param string $email the user's email.
-     * @return bool true if present, false if not.
-     */
-    private static function email_present_login(string $email): bool {
-        global $cnx;
-        $stmt = $cnx->prepare("SELECT id FROM login_verify WHERE email = :email");
-        $stmt->bindParam(":email", $email, PDO::PARAM_STR);
-        $stmt->execute();
-
-        $result = $stmt->fetch();
-        return $result != null;
-    }
-
-    /**
      *
      *
      * @param string $email the user's email.
@@ -480,6 +446,118 @@ class Tool
     public static function delete_login_verify(string $email): bool {
         global $cnx;
         $stmt = $cnx->prepare("DELETE FROM login_verify WHERE email = :email");
+        $stmt->bindParam(":email", $email, PDO::PARAM_STR);
+        $stmt->execute();
+        return $stmt->rowCount() > 0;
+    }
+
+    /**
+     *
+     *
+     * @param string $email the user's email.
+     * @return bool true if the procedure went well, false if not.
+     */
+    public static function send_verification_email_change(string $email, string $password): bool {
+        try {
+            require_once('include/sendChangeMail.php');
+            $code = self::create_verification_code_in_db_change($email, $password);
+            $link = "http://localhost/Travia/recover?verify=" . $code . "&email=" . $email;
+            $mail = new PHPMailer(true);
+            return sendChangeMail($mail, $email, $link);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    /**
+     *  Create a new verification code in the database linked to an email and return it.
+     *  In the case this email is already in the database, delete the row and create a new one.
+     *  Doesn't work if the $cnx isn't setup.
+     *
+     * @param string $email the user's email.
+     * @return string the verification code (6 random digits).
+     */
+    private static function create_verification_code_in_db_change(string $email, string $password, int $length = 10): string {
+        global $cnx;
+        if (self::email_present($email)) {
+            $rm_query = $cnx->prepare("DELETE FROM change_verify WHERE email = :email");
+            $rm_query->bindParam(":email", $email, PDO::PARAM_STR);
+            $rm_query->execute();
+        }
+        $code = self::random_string($length);
+        $datetime = date("Y-m-d H:i:s");
+
+        // Add the newly created code :
+        $add_query = $cnx->prepare("
+            INSERT INTO change_verify (email, code, date, password) VALUES (:email, :code, :date, :password)");
+        $add_query->bindParam(":email", $email, PDO::PARAM_STR);
+        $add_query->bindParam(":code", $code, PDO::PARAM_STR);
+        $add_query->bindParam(":date", $datetime, PDO::PARAM_STR);
+        $add_query->bindParam(":password", $password, PDO::PARAM_STR);
+        $add_query->execute();
+
+        return $code;
+    }
+
+    /**
+     *
+     *
+     * @param string $email the user's email.
+     * @return bool true if the verification code is still valid, false if not.
+     */
+    public static function check_expiration_change(string $email): bool {
+        global $cnx;
+        $stmt = $cnx->prepare("SELECT date FROM change_verify WHERE email = :email");
+        $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+        $stmt->execute();
+        $result = $stmt->fetch();
+
+        if ($result != null) {
+            $code_date = new DateTime($result['date']);
+            $current_date = new DateTime();
+            $code_date->add(new DateInterval('P10M'));
+
+            if ($code_date < $current_date) {
+                $rm_code = $cnx->prepare("DELETE FROM change_verify WHERE email = :email");
+                $rm_code->bindParam(":email", $email, PDO::PARAM_STR);
+                $rm_code->execute();
+                return false;
+            } else {
+                return true;
+            }
+        } return false;
+    }
+
+    /**
+     *
+     *
+     * @param string $email the user's email.
+     * @param string $code
+     * @return bool
+     */
+    public static function check_code_change(string $email, string $code): bool {
+        global $cnx;
+        $stmt = $cnx->prepare("SELECT code FROM change_verify WHERE email = :email");
+        $stmt->bindParam(":email", $email, PDO::PARAM_STR);
+        $stmt->execute();
+        $result = $stmt->fetch();
+
+        $code_db = strval($result["code"]);
+        return strcmp($code, $code_db);
+    }
+
+    public static function get_new_password_change(string $email): string {
+        global $cnx;
+        $stmt = $cnx->prepare("SELECT password FROM change_verify WHERE email = :email");
+        $stmt->bindParam(":email", $email, PDO::PARAM_STR);
+        $stmt->execute();
+        $result = $stmt->fetch();
+        return strval($result["password"]);
+    }
+
+    public static function delete_change_verify(string $email): bool {
+        global $cnx;
+        $stmt = $cnx->prepare("DELETE FROM change_verify WHERE email = :email");
         $stmt->bindParam(":email", $email, PDO::PARAM_STR);
         $stmt->execute();
         return $stmt->rowCount() > 0;
@@ -539,45 +617,5 @@ class Tool
                 putenv("$key=$value");
             }
         }
-    }
-
-    function create_captcha($text): string {
-        $width = 200;
-        $height = 100;
-        $font_file = "data/fonts/OpenSans-Regular.ttf";
-
-        $image = imagecreatetruecolor($width, $height);
-
-        $white = imagecolorallocate($image, 255, 255, 255);
-        $black = imagecolorallocate($image, 0, 0, 0);
-
-        imagefill($image, 0, 0, $white);
-        imagettftext($image, 25, rand(-20,20), $width/4, 60, $black, $font_file, $text);
-
-        $warped_image = imagecreatetruecolor($width, $height);
-        imagefill($warped_image, 0, 0, imagecolorallocate($warped_image, 255, 255, 255));
-
-        for ($x=0; $x < $width; $x++) {
-            # code...
-            for ($y=0; $y < $height; $y++) {
-                # code...
-                $index = imagecolorat($image, $x, $y);
-                $color_comp = imagecolorsforindex($image, $index);
-
-                $color = imagecolorallocate($warped_image, $color_comp['red'], $color_comp['green'], $color_comp['blue']);
-
-                $imageX = $x;
-                $imageY = $y + sin($x / 10) * 10;
-
-                imagesetpixel($warped_image, $imageX, $imageY, $color);
-            }
-        }
-
-        $path = "captcha.jpg";
-        imagejpeg($warped_image,$path);
-        imagedestroy($warped_image);
-        imagedestroy($image);
-
-        return $path;
     }
 }

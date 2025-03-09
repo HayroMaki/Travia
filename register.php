@@ -107,12 +107,6 @@ if (isset($first_name) && isset($last_name) && isset($email) && isset($password)
         if (!passwordRegex.test(password)) {
             errorContainer.textContent = "Password must be between 12 and 32 characters long, with at least one lowercase letter, one capital letter, one number and one special character (* _ ? ...)";
             event.preventDefault();
-            return;
-        }
-
-        if (password !== confirmPassword) {
-            errorContainer.textContent = "Les mots de passe ne correspondent pas.";
-            event.preventDefault();
         }
     });
 </script>

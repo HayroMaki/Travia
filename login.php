@@ -10,6 +10,10 @@
         unset($_SESSION["connected"]);
     }
 
+    if (isset($_SESSION["account"])) {
+        unset($_SESSION["account"]);
+    }
+
     // Set up the PDO
     require_once("include/setupPDO.php");
     require_once("include/includeClasses.php");
@@ -56,6 +60,7 @@
 
                 <label for="login-password" class="login-label">Password</label>
                 <input type="password" name="password" class="login-input" id="login-password" placeholder="your password..." required/>
+                <div class="login-center"><a href="recover.php" class="login-link">I forgot my password.</a></div>
 
                 <div class="login-center">
                     <input type="submit" class="login-submit" value="Login" id="login-submit">

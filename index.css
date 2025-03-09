@@ -700,3 +700,34 @@ hr {
     background-color: midnightblue;
     border-color: dodgerblue;
 }
+
+.account-actions {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 3rem;
+}
+
+.account-button {
+    width: 100px;
+    height: 50px;
+    background-color: #050505;
+    text-align: center;
+    justify-content: center;
+    margin: 1em;
+    border: 3px outset dimgray;
+    transition: all 0.5s;
+}
+
+.account-button:hover {
+    background-color: midnightblue;
+    border-color: dodgerblue;
+}
+
+.account-link:link, .account-link:visited, .account-link:active {
+    text-decoration: none;
+    color: white;
+    font-family: Syne, sans-serif;
+    font-weight: normal;
+}
