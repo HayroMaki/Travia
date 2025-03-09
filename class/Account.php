@@ -52,6 +52,15 @@ class Account {
         return new Account($f['email'],$f['first-name'],$f['last-name'], $f['home-planet'], $f['work-planet']);
     }
 
+    public function is_admin(): bool {
+        global $cnx;
+        $stmt = $cnx->prepare("SELECT * FROM admin WHERE email = ?");
+        $stmt->bindParam(1, $this->email, PDO::PARAM_STR);
+        $stmt->execute();
+        $f = $stmt->fetch();
+        return !empty($f);
+    }
+
     public function delete(): bool {
         global $cnx;
         $stmt = $cnx->prepare("DELETE FROM account WHERE email = ?");

@@ -2,9 +2,19 @@
 
 <?php
     session_start();
+    // Set up the PDO
+    require_once("include/setupPDO.php");
+    require_once("include/includeClasses.php");
+
     // Check that the user is connected :
     if (!isset($_SESSION["email"]) || !$_SESSION["connected"]) {
         header("Location:login.php");
+    } else {
+        $email = $_SESSION['email'];
+        $account = Account::get_account_from_mail($email);
+        if ($account == null) {
+            header("Location:login.php");
+        }
     }
 
     // Check or add the cart cookie :
@@ -17,10 +27,6 @@
     ini_set('max_execution_time', 0);
     ini_set('display_errors', 1);
     error_reporting(E_ALL);
-
-    // Set up the PDO
-    require_once("include/setupPDO.php");
-    require_once("include/includeClasses.php");
 
     global $ship_count;
     $ship_count = 0;
@@ -92,7 +98,7 @@
         </div>
         <?php
             //Activate only for admin accounts :
-            include("include/admin.php");
+            if (isset($account) && $account->is_admin()) { include("include/admin.php");}
             include("include/footer.inc.php");
         ?>
 

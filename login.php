@@ -10,10 +10,6 @@
         unset($_SESSION["connected"]);
     }
 
-    if (isset($_SESSION["account"])) {
-        unset($_SESSION["account"]);
-    }
-
     // Set up the PDO
     require_once("include/setupPDO.php");
     require_once("include/includeClasses.php");

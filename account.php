@@ -34,6 +34,9 @@
                     <h1 style="text-align: center">Something went wrong, we couldn't delete your account, please try again later.</h1>
                 <?php }}} else { ?>
             <h1 style="text-align: center">Hello <?= $account->get_first_name() . " " . $account->get_last_name() ?></h1>
+            <?php if ($account->is_admin()) { ?>
+                <h1 style="text-align: center">Admin account.</h1>
+            <?php } ?>
             <div class="account-actions">
                 <a href="login.php" class="account-link"><div class="account-button">Log<br>Out</div></a>
                 <a href="?delete=1" class="account-link"><div class="account-button">Delete<br>Account</div></a>
