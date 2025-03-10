@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le : lun. 18 nov. 2024 à 16:24
+-- Généré le : lun. 10 mars 2025 à 20:01
 -- Version du serveur : 8.3.0
 -- Version de PHP : 8.2.18
 
@@ -24,6 +24,58 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Structure de la table `account`
+--
+
+DROP TABLE IF EXISTS `account`;
+CREATE TABLE IF NOT EXISTS `account` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `email` varchar(190) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `first-name` varchar(190) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `last-name` varchar(190) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `token` text COLLATE utf8mb4_bin,
+  `home-planet` int DEFAULT NULL,
+  `work-planet` int DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `EMAIL` (`email`) USING BTREE,
+  KEY `FIRST-NAME` (`first-name`) USING BTREE,
+  KEY `LAST-NAME` (`last-name`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `admin`
+--
+
+DROP TABLE IF EXISTS `admin`;
+CREATE TABLE IF NOT EXISTS `admin` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `email` varchar(190) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `EMAIL` (`email`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `change_verify`
+--
+
+DROP TABLE IF EXISTS `change_verify`;
+CREATE TABLE IF NOT EXISTS `change_verify` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `email` varchar(190) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `code` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `date` datetime NOT NULL,
+  `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
+-- --------------------------------------------------------
+
+--
 -- Structure de la table `log`
 --
 
@@ -31,9 +83,24 @@ DROP TABLE IF EXISTS `log`;
 CREATE TABLE IF NOT EXISTS `log` (
   `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
   `date` timestamp NOT NULL,
-  `trace` text COLLATE utf8mb4_bin,
+  `trace` text CHARACTER SET utf8mb4 COLLATE utf8mb4_bin,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `login_verify`
+--
+
+DROP TABLE IF EXISTS `login_verify`;
+CREATE TABLE IF NOT EXISTS `login_verify` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `email` varchar(190) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `code` varchar(6) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `date` datetime NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
 -- --------------------------------------------------------
 
@@ -46,7 +113,7 @@ CREATE TABLE IF NOT EXISTS `planet` (
   `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` varchar(190) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
   `camp` varchar(190) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
-  `image` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL,
+  `image` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
   `coord` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
   `x` float NOT NULL,
   `y` float NOT NULL,
@@ -78,14 +145,34 @@ CREATE TABLE IF NOT EXISTS `planet` (
 -- --------------------------------------------------------
 
 --
+-- Structure de la table `register_verify`
+--
+
+DROP TABLE IF EXISTS `register_verify`;
+CREATE TABLE IF NOT EXISTS `register_verify` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `email` varchar(190) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `code` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `date` datetime NOT NULL,
+  `first-name` varchar(190) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `last-name` varchar(190) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `home-planet` int DEFAULT NULL,
+  `work-planet` int DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
+-- --------------------------------------------------------
+
+--
 -- Structure de la table `ship`
 --
 
 DROP TABLE IF EXISTS `ship`;
 CREATE TABLE IF NOT EXISTS `ship` (
   `id` int UNSIGNED NOT NULL,
-  `name` varchar(50) COLLATE utf8mb4_bin NOT NULL,
-  `camp` varchar(50) COLLATE utf8mb4_bin NOT NULL,
+  `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `camp` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
   `speed_kmh` float NOT NULL,
   `capacity` int NOT NULL,
   PRIMARY KEY (`id`),
@@ -93,6 +180,26 @@ CREATE TABLE IF NOT EXISTS `ship` (
   KEY `CAMP` (`camp`),
   KEY `CAPACITY` (`capacity`),
   KEY `SPEED` (`speed_kmh`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `travel`
+--
+
+DROP TABLE IF EXISTS `travel`;
+CREATE TABLE IF NOT EXISTS `travel` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `time` varchar(190) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `price` double NOT NULL,
+  `distance` double NOT NULL,
+  `departure` int NOT NULL,
+  `destination` int NOT NULL,
+  `cost` varchar(190) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `filters` varchar(190) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `txt` varchar(190) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
 -- --------------------------------------------------------
@@ -114,27 +221,6 @@ CREATE TABLE IF NOT EXISTS `trip` (
   KEY `DESTINATION PLANET` (`destinationPlanetId`),
   KEY `DEPARTURE DAY AND TIME` (`departureDay`,`departureTime`),
   KEY `SHIP ID` (`shipId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
-COMMIT;
-
--- --------------------------------------------------------
-
---
--- Structure de la table `travel`
---
-
-DROP TABLE IF EXISTS `travel`;
-CREATE TABLE IF NOT EXISTS `travel` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `time` varchar(190) NOT NULL,
-  `price` double NOT NULL,
-  `distance` double NOT NULL,
-  `departure` int NOT NULL,
-  `destination` int NOT NULL,
-  `cost` varchar(190) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
-  `filters` varchar(190) COLLATE utf8mb4_bin NOT NULL,
-  `txt` varchar(190) COLLATE utf8mb4_bin NOT NULL,
-  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 COMMIT;
 
