@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 
 <?php
+    use ReCaptcha\ReCaptcha;
+
     session_start();
+
     if (isset($_SESSION["email"])) {
         unset($_SESSION["email"]);
     }
-
     if (isset($_SESSION["connected"])) {
         unset($_SESSION["connected"]);
     }
@@ -13,12 +15,23 @@
     // Set up the PDO
     require_once("include/setupPDO.php");
     require_once("include/includeClasses.php");
-    include("include/fontSelector.php");
+    require_once("library/recaptcha-master/src/autoload.php");
 
     if (isset($_POST["email"]) && isset($_POST["password"])) {
         $email = $_POST["email"];
+        $secret = "6LdqWPAqAAAAADyB9FSbRNLWmoR1v1tf4JpWdOrd";
 
-        if (isset($_POST["captcha"]) && $_POST["captcha"] == $_SESSION["captcha1"] + $_SESSION["captcha2"]) {
+        // Google Captcha :
+        $recaptcha = new ReCaptcha($secret);
+        $gRecaptchaResponse = $_POST["g-recaptcha-response"];
+        $resp = $recaptcha->setExpectedHostname('localhost') // Domain Name
+            ->verify($gRecaptchaResponse);
+        var_dump($resp->isSuccess());
+
+        if (isset($_POST["captcha"])
+            && $_POST["captcha"] == $_SESSION["captcha1"] + $_SESSION["captcha2"]
+            && $resp->isSuccess()
+        ) {
             // Check the email/password couple from DB :
             if (Tool::verify_email_password($email, $_POST["password"])) {
 
@@ -38,6 +51,7 @@
         } else {
             $error = "Invalid captcha.";
         }
+
     }
 ?>
 
@@ -47,6 +61,19 @@
         <title>Travia</title>
         <link href="index.css?v=<?php echo time(); ?>" rel="stylesheet">
         <link rel="stylesheet" href="cart/cart.css">
+        <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+        <style>
+            .m-captcha {
+                width: 100%;
+                height: auto;
+                margin-bottom: 1rem;
+            }
+
+            .g-recaptcha {
+                display: flex;
+                justify-content: center;
+            }
+        </style>
     </head>
     <body>
         <?php
@@ -63,9 +90,11 @@
                 <div class="login-center"><a href="recover.php" class="login-link">I forgot my password.</a></div>
 
                 <div class="login-center" style="width:40%; margin: 1rem auto">
-                    <img src="include/captcha.php" alt="captcha"/>
+                    <img class="m-captcha" src="include/captcha.php" alt="captcha"/>
                     <input type="text" name="captcha" class="login-input">
                 </div>
+
+                <div class="g-recaptcha" data-sitekey="6LdqWPAqAAAAAO4MFVQj9x6an518YWPj8JUf9lqo"></div>
 
                 <div class="login-center">
                     <input type="submit" class="login-submit" value="Login" id="login-submit">
