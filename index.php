@@ -7,7 +7,7 @@
     require_once("include/includeClasses.php");
 
     // Check that the user is connected :
-    if (!isset($_SESSION["email"]) || !$_SESSION["connected"]) {
+    if (!isset($_SESSION["email"]) || !$_SESSION["connected"] || $_SESSION["connected"] !== true) {
         header("Location:login.php");
     } else {
         $email = $_SESSION['email'];

@@ -1,56 +1,56 @@
 <!DOCTYPE html>
 
 <?php
-session_start();
+    session_start();
 
-if (isset($_SESSION["email"])) {
-    unset($_SESSION["email"]);
-}
-
-if (isset($_SESSION["connected"])) {
-    unset($_SESSION["connected"]);
-}
-
-// Set up the PDO
-
-use PHPMailer\PHPMailer\PHPMailer;
-
-require_once("include/setupPDO.php");
-require_once("include/includeClasses.php");
-
-$first_name = filter_input(INPUT_POST, "first-name");
-$last_name = filter_input(INPUT_POST, "last-name");
-$email = filter_input(INPUT_POST, "email", FILTER_SANITIZE_EMAIL);
-$password = filter_input(INPUT_POST, "password");
-$verify_password = filter_input(INPUT_POST, "verify-password");
-
-if (isset($first_name) && isset($last_name) && isset($email) && isset($password) && isset($verify_password)) {
-    // Check if email is already used :
-    // This poses a problem, a user should never know if the email he entered is used or not, so we don't tell him.
-    if (Tool::email_present($email)) {
-        $msg = "Email is already in use.";
-        Tool::add_register_log($email, $first_name, $last_name, false, $msg);
+    if (isset($_SESSION["email"])) {
+        unset($_SESSION["email"]);
     }
 
-    // Check that both passwords are the same :
-    else if ($password != $verify_password) {
-        $error = "Passwords do not match.";
-        Tool::add_register_log($email, $first_name, $last_name, false, $error);
+    if (isset($_SESSION["connected"])) {
+        unset($_SESSION["connected"]);
     }
 
-    // Send the verification email with a newly generated random verification code :
-    else {
-        if (Tool::send_verification_email_registration($email, password_hash($password,PASSWORD_BCRYPT),
-            $first_name, $last_name, null, null)) {
-            Tool::add_verification_log($email, true, "");
-            $_SESSION["email"] = $email;
-            $error = "If your email address is not already used, a verification link has been sent to your email address.";
-        } else {
-            Tool::add_verification_log($email, false, "Mailer Error.");
-            $error = "Could not send verification email, try again later.";
+    // Set up the PDO
+
+    use PHPMailer\PHPMailer\PHPMailer;
+
+    require_once("include/setupPDO.php");
+    require_once("include/includeClasses.php");
+
+    $first_name = filter_input(INPUT_POST, "first-name");
+    $last_name = filter_input(INPUT_POST, "last-name");
+    $email = filter_input(INPUT_POST, "email", FILTER_SANITIZE_EMAIL);
+    $password = filter_input(INPUT_POST, "password");
+    $verify_password = filter_input(INPUT_POST, "verify-password");
+
+    if (isset($first_name) && isset($last_name) && isset($email) && isset($password) && isset($verify_password)) {
+        // Check if email is already used :
+        // This poses a problem, a user should never know if the email he entered is used or not, so we don't tell him.
+        if (Tool::email_present($email)) {
+            $msg = "Email is already in use.";
+            Tool::add_register_log($email, $first_name, $last_name, false, $msg);
+        }
+
+        // Check that both passwords are the same :
+        else if ($password != $verify_password) {
+            $error = "Passwords do not match.";
+            Tool::add_register_log($email, $first_name, $last_name, false, $error);
+        }
+
+        // Send the verification email with a newly generated random verification code :
+        else {
+            if (Tool::send_verification_email_registration($email, password_hash($password,PASSWORD_BCRYPT),
+                $first_name, $last_name, null, null)) {
+                Tool::add_verification_log($email, true, "");
+                $_SESSION["email"] = $email;
+                $error = "If your email address is not already used, a verification link has been sent to your email address.";
+            } else {
+                Tool::add_verification_log($email, false, "Mailer Error.");
+                $error = "Could not send verification email, try again later.";
+            }
         }
     }
-}
 ?>
 
 <html lang="fr">

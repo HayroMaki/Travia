@@ -3,7 +3,7 @@ use PHPMailer\PHPMailer\PHPMailer;
 
 /**
  * A completely static class that has some QOL functions.
- * Used for logs and other things.
+ * Used for logs, mails, code generation and other things.
  */
 class Tool
 {

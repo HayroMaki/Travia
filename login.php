@@ -26,7 +26,6 @@
         $gRecaptchaResponse = $_POST["g-recaptcha-response"];
         $resp = $recaptcha->setExpectedHostname('localhost') // Domain Name
             ->verify($gRecaptchaResponse);
-        var_dump($resp->isSuccess());
 
         if (isset($_POST["captcha"])
             && $_POST["captcha"] == $_SESSION["captcha1"] + $_SESSION["captcha2"]

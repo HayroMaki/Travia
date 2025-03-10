@@ -5,7 +5,9 @@
     global $cnx;
 
     // Default JSON to return :
-    $json = array("connexion" => false);
+    $json = array(
+        "connexion" => false,
+        "error" => "Invalid login information.");
 
     // Check case where we have a connection using email and password :
     if (isset($_GET["email"]) && isset($_GET["password"])) {
@@ -23,12 +25,13 @@
             $stmt->execute();
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            // Check if the token is still valid :
+            // Check if the token is still valid (maybe the password was changed) :
             if ($result && $result["token"] == $token) {
                 $json = array(
                     "connexion" => true,
                     "token" => $token,
                 );
+            // If it isn't valid anymore, change it :
             } else {
                 // Add the token in the account in DB :
                 $stmt = $cnx->prepare("UPDATE account SET token = :token WHERE email = :email");
@@ -45,6 +48,7 @@
                 }
             }
         }
+
     // Check case where we have a connection using a token :
     } else if (isset($_GET["token"])) {
         $token = $_GET["token"];
@@ -62,6 +66,7 @@
                 "token" => $token,
             );
         }
+
     // If there is no GET or invalid GET :
     } else {
         $json = array(
