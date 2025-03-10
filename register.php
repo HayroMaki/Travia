@@ -99,7 +99,6 @@ if (isset($first_name) && isset($last_name) && isset($email) && isset($password)
 <script>
     document.getElementById("login-form").addEventListener("submit", function (event) {
         const password = document.getElementById("login-password").value;
-        const confirmPassword = document.getElementById("login-verify-password").value;
         const errorContainer = document.querySelector(".login-error");
 
         const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{12,32}$/;

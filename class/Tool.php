@@ -546,6 +546,12 @@ class Tool
         return strcmp($code, $code_db);
     }
 
+    /**
+     *
+     *
+     * @param string $email
+     * @return string
+     */
     public static function get_new_password_change(string $email): string {
         global $cnx;
         $stmt = $cnx->prepare("SELECT password FROM change_verify WHERE email = :email");
@@ -555,6 +561,12 @@ class Tool
         return strval($result["password"]);
     }
 
+    /**
+     *
+     *
+     * @param string $email
+     * @return bool
+     */
     public static function delete_change_verify(string $email): bool {
         global $cnx;
         $stmt = $cnx->prepare("DELETE FROM change_verify WHERE email = :email");
@@ -617,5 +629,26 @@ class Tool
                 putenv("$key=$value");
             }
         }
+    }
+
+    /**
+     * Generate an url-safe token using the concatenated string of email and hashed password,
+     * by default, the token's length is 16.
+     *
+     * @param string $email the account's email address.
+     * @param string $password the account's password.
+     * @param int $length the token's length (default = 16);
+     * @return false|string the generated url-safe token as a string or false on failure.
+     */
+    public static function generate_token(string $email, string $password, int $length = 16) {
+        $string = $email . $password;
+        // Create a raw binary sha256 hash and base64 encode it :
+        $hash_base64 = base64_encode(hash('sha256', $string, true));
+        // Replace non-url-safe chars to make the string url-safe :
+        $hash_url_safe = strtr($hash_base64, '+/', '-_');
+        // Trim base64 padding characters from the end :
+        $hash_url_safe = rtrim($hash_url_safe, '=');
+        // return a shortened string :
+        return substr($hash_url_safe, 0, $length);
     }
 }
