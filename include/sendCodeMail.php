@@ -33,7 +33,7 @@ function sendCodeMail($mail,$to,$content): bool {
         $mail->addAddress($to, 'Travia User');//Add a recipient
         //Content
         $mail->isHTML(true);//Set email format to HTML
-        $mail->Subject = 'Verifcation code for Travia';
+        $mail->Subject = 'Verification code for Travia';
         $mail->Body = '
             <!DOCTYPE html>
             <html lang="en">

@@ -217,7 +217,8 @@ class Tool
     }
 
     /**
-     *
+     * Create a new register procedure in the database, generate and send a link to the user's email.
+     * Doesn't work if the $cnx isn't setup.
      *
      * @param string $email the user's email.
      * @param string $enc_password the user's ENCRYPTED password.
@@ -252,7 +253,9 @@ class Tool
      * @param string $last_name the user's last name.
      * @param int|null $home_planet_id the user's home planet (can be null).
      * @param int|null $work_planet_id the user's work planet (can be null).
+     * @param int $length the code's length (default = 6).
      * @return string the verification code (6 random digits).
+     * @throws \Random\RandomException
      */
     private static function create_verification_code_in_db_register(string $email, string $enc_password,
                                                                     string $first_name, string $last_name,
@@ -284,29 +287,12 @@ class Tool
     }
 
     /**
-     * Generate a random string of characters using random_int.
-     *
-     * @param int $length How many characters do we want (6 by default).
-     * @param string $chars A string of all possible characters to select from ([0-9] by default).
-     * @return string the generated string of characters.
-     */
-    private static function random_string(int $length = 6, string $chars = '0123456789'): string {
-        if ($length < 1) {
-            throw new \RangeException("Length must");
-        }
-        $code = [];
-        $max = mb_strlen($chars, '8bit') - 1;
-        for ($i = 0; $i < $length; ++$i) {
-            $code []= $chars[random_int(0, $max)];
-        }
-        return implode('', $code);
-    }
-
-    /**
-     *
+     * Check if the user's login procedure is expired (10 minutes).
+     * Doesn't work if the $cnx isn't setup.
      *
      * @param string $email the user's email.
      * @return bool true if the verification code is still valid, false if not.
+     * @throws DateMalformedStringException
      */
     public static function check_expiration_registration(string $email): bool {
         global $cnx;
@@ -332,11 +318,12 @@ class Tool
     }
 
     /**
-     *
+     * Compare the inputted code with the one from the register_verify table.
+     * Doesn't work if the $cnx isn't setup.
      *
      * @param string $email the user's email.
-     * @param string $code
-     * @return bool
+     * @param string $code the code that was sent to the email address.
+     * @return bool true if the code is valid, false if not.
      */
     public static function check_code_registration(string $email, string $code): bool {
         global $cnx;
@@ -350,7 +337,8 @@ class Tool
     }
 
     /**
-     *
+     * Create a new login procedure in the database, generate and send a code to the user's email.
+     * Doesn't work if the $cnx isn't setup.
      *
      * @param string $email the user's email.
      * @return bool true if the procedure went well, false if not.
@@ -373,7 +361,9 @@ class Tool
      *  Doesn't work if the $cnx isn't setup.
      *
      * @param string $email the user's email.
+     * @param int $length the code's length (default = 6).
      * @return string the verification code (6 random digits).
+     * @throws \Random\RandomException
      */
     private static function create_verification_code_in_db_login(string $email, int $length = 6): string {
         global $cnx;
@@ -397,10 +387,12 @@ class Tool
     }
 
     /**
-     *
+     * Check if the user's password change procedure is expired (10 minutes).
+     * Doesn't work if the $cnx isn't setup.
      *
      * @param string $email the user's email.
      * @return bool true if the verification code is still valid, false if not.
+     * @throws DateMalformedStringException
      */
     public static function check_expiration_login(string $email): bool {
         global $cnx;
@@ -426,11 +418,12 @@ class Tool
     }
 
     /**
-     *
+     * Compare the inputted code with the one from the login_verify table.
+     * Doesn't work if the $cnx isn't setup.
      *
      * @param string $email the user's email.
-     * @param string $code
-     * @return bool
+     * @param string $code the code that was sent to the email address.
+     * @return bool true if the code is valid, false if not.
      */
     public static function check_code_login(string $email, string $code): bool {
         global $cnx;
@@ -443,6 +436,13 @@ class Tool
         return strcmp($code, $code_db);
     }
 
+    /**
+     * Delete a row concerning the email in the login_verify table.
+     * Doesn't work if the $cnx isn't setup.
+     *
+     * @param string $email the user's email.
+     * @return bool true if the deletion was effective, false if not.
+     */
     public static function delete_login_verify(string $email): bool {
         global $cnx;
         $stmt = $cnx->prepare("DELETE FROM login_verify WHERE email = :email");
@@ -452,9 +452,11 @@ class Tool
     }
 
     /**
-     *
+     * Create a new password change procedure in the database, generate and send a link to the user's email.
+     * Doesn't work if the $cnx isn't setup.
      *
      * @param string $email the user's email.
+     * @param string $password the user's new hashed password.
      * @return bool true if the procedure went well, false if not.
      */
     public static function send_verification_email_change(string $email, string $password): bool {
@@ -470,12 +472,15 @@ class Tool
     }
 
     /**
-     *  Create a new verification code in the database linked to an email and return it.
+     *  Create a new verification code for password change in the database linked to an email and return it.
      *  In the case this email is already in the database, delete the row and create a new one.
      *  Doesn't work if the $cnx isn't setup.
      *
      * @param string $email the user's email.
-     * @return string the verification code (6 random digits).
+     * @param string $password the user's new hashed password.
+     * @param int $length the code's length (default = 10).
+     * @return string the verification code (default = 10 random digits).
+     * @throws \Random\RandomException
      */
     private static function create_verification_code_in_db_change(string $email, string $password, int $length = 10): string {
         global $cnx;
@@ -500,10 +505,12 @@ class Tool
     }
 
     /**
-     *
+     * Check if the user's password change procedure is expired (10 minutes).
+     * Doesn't work if the $cnx isn't setup.
      *
      * @param string $email the user's email.
      * @return bool true if the verification code is still valid, false if not.
+     * @throws DateMalformedStringException
      */
     public static function check_expiration_change(string $email): bool {
         global $cnx;
@@ -529,11 +536,12 @@ class Tool
     }
 
     /**
-     *
+     * Compare the inputted code with the one from the change_verify table.
+     * Doesn't work if the $cnx isn't setup.
      *
      * @param string $email the user's email.
-     * @param string $code
-     * @return bool
+     * @param string $code the code that was sent to the email address.
+     * @return bool true if the code is valid, false if not.
      */
     public static function check_code_change(string $email, string $code): bool {
         global $cnx;
@@ -547,10 +555,11 @@ class Tool
     }
 
     /**
+     * Get the new hashed password that the user inputted in order to change it.
+     * Doesn't work if the $cnx isn't setup.
      *
-     *
-     * @param string $email
-     * @return string
+     * @param string $email the user's email.
+     * @return string the new hashed password.
      */
     public static function get_new_password_change(string $email): string {
         global $cnx;
@@ -562,10 +571,11 @@ class Tool
     }
 
     /**
+     * Delete a row concerning the email in the change_verify table.
+     * Doesn't work if the $cnx isn't setup.
      *
-     *
-     * @param string $email
-     * @return bool
+     * @param string $email the user's email.
+     * @return bool true if the deletion was effective, false if not.
      */
     public static function delete_change_verify(string $email): bool {
         global $cnx;
@@ -576,10 +586,12 @@ class Tool
     }
 
     /**
-     *
+     * Create a new account in the database from its information in the register_verify table,
+     * then deletes those data's from the register_verify table.
+     * Doesn't work if the $cnx isn't setup.
      *
      * @param string $email the user's email.
-     * @return bool
+     * @return bool true if the user was successfully registered, false if not.
      */
     public static function register(string $email): bool {
         global $cnx;
@@ -629,6 +641,26 @@ class Tool
                 putenv("$key=$value");
             }
         }
+    }
+
+    /**
+     * Generate a random string of characters using random_int.
+     *
+     * @param int $length How many characters do we want (6 by default).
+     * @param string $chars A string of all possible characters to select from ([0-9] by default).
+     * @return string the generated string of characters.
+     * @throws \Random\RandomException
+     */
+    private static function random_string(int $length = 6, string $chars = '0123456789'): string {
+        if ($length < 1) {
+            throw new \RangeException("Length must");
+        }
+        $code = [];
+        $max = mb_strlen($chars, '8bit') - 1;
+        for ($i = 0; $i < $length; ++$i) {
+            $code []= $chars[random_int(0, $max)];
+        }
+        return implode('', $code);
     }
 
     /**
