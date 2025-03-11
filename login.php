@@ -17,11 +17,15 @@
     require_once("include/includeClasses.php");
     require_once("library/recaptcha-master/src/autoload.php");
 
+    // Load .env file with reCAPTCHA keys :
+    Tool::load_env_file('data' . '/reCAPTCHA.env');
+    $public = getenv("RECAPTCHA_PUBLIC_KEY");
+
     if (isset($_POST["email"]) && isset($_POST["password"])) {
         $email = $_POST["email"];
-        $secret = "6LdqWPAqAAAAADyB9FSbRNLWmoR1v1tf4JpWdOrd";
 
         // Google Captcha :
+        $secret = getenv("RECAPTCHA_PRIVATE_KEY");
         $recaptcha = new ReCaptcha($secret);
         $gRecaptchaResponse = $_POST["g-recaptcha-response"];
         $resp = $recaptcha->setExpectedHostname('localhost') // Domain Name
@@ -93,7 +97,7 @@
                     <input type="text" name="captcha" class="login-input">
                 </div>
 
-                <div class="g-recaptcha" data-sitekey="6LdqWPAqAAAAAO4MFVQj9x6an518YWPj8JUf9lqo"></div>
+                <div class="g-recaptcha" data-sitekey=<?=$public?>></div>
 
                 <div class="login-center">
                     <input type="submit" class="login-submit" value="Login" id="login-submit">

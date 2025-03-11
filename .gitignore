@@ -1,4 +1,4 @@
 include/config_local.php
 include/config.php
-data/.env
+data/*.env
 travel-search/cache_*
