@@ -7,15 +7,15 @@
     require_once("include/includeClasses.php");
 
     // Check that the user is connected :
-    if (!isset($_SESSION["email"]) || !$_SESSION["connected"] || $_SESSION["connected"] !== true) {
-        header("Location:login.php");
-    } else {
-        $email = $_SESSION['email'];
-        $account = Account::get_account_from_mail($email);
-        if ($account == null) {
-            header("Location:login.php");
-        }
-    }
+//    if (!isset($_SESSION["email"]) || !$_SESSION["connected"] || $_SESSION["connected"] !== true) {
+//        header("Location:login.php");
+//    } else {
+//        $email = $_SESSION['email'];
+//        $account = Account::get_account_from_mail($email);
+//        if ($account == null) {
+//            header("Location:login.php");
+//        }
+//    }
 
     // Check or add the cart cookie :
     if (!isset($_COOKIE['cart'])) {
